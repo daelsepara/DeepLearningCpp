@@ -318,7 +318,6 @@ public:
 	
 	void Setup(ManagedArray& output, NeuralNetworkOptions opts)
 	{
-		
 		Wji = ManagedArray(opts.Inputs + 1, opts.Nodes);
 		Wkj = ManagedArray(opts.Nodes + 1, opts.Categories);
 
