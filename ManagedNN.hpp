@@ -123,14 +123,17 @@ public:
 		ManagedOps::Free(tDkj);
 		ManagedOps::Free(tDifference);
 	}
-
+	
+	void ClearDeltas()
+	{
+		ManagedOps::Free(DeltaWji);
+		ManagedOps::Free(DeltaWkj);
+	}
+	
 	void ApplyGradients(NeuralNetworkOptions opts)
 	{
 		ManagedMatrix::Add(Wkj, DeltaWkj, -opts.Alpha);
 		ManagedMatrix::Add(Wji, DeltaWji, -opts.Alpha);
-
-		ManagedOps::Free(DeltaWji);
-		ManagedOps::Free(DeltaWkj);
 	}
 
 	void Rand(ManagedArray& rand, Random random)
@@ -312,9 +315,10 @@ public:
 
 		return prediction;
 	}
-
-	void Train(ManagedArray& input, ManagedArray& output, NeuralNetworkOptions opts)
+	
+	void Setup(ManagedArray& output, NeuralNetworkOptions opts)
 	{
+		
 		Wji = ManagedArray(opts.Inputs + 1, opts.Nodes);
 		Wkj = ManagedArray(opts.Nodes + 1, opts.Categories);
 
@@ -328,17 +332,33 @@ public:
 
 		Cost = 1.0;
 		Iterations = 0;
+	}
+	
+	bool Step(ManagedArray& input, NeuralNetworkOptions opts)
+	{
+		Forward(input);
+		BackPropagation(input);
 
-		while (!std::isnan(Cost) && Iterations < opts.Epochs && Cost > opts.Tolerance)
+		bool optimized = (std::isnan(opts.UseL2 ? L2 : Cost) || (opts.UseL2 ? L2 : Cost) < opts.Tolerance);
+
+		// Apply gradients only if the error is still high
+		if (!optimized)
 		{
-			Forward(input);
-			BackPropagation(input);
 			ApplyGradients(opts);
-
-			Iterations = Iterations + 1;
 		}
 
-		ManagedOps::Free(Y_true);
+		ClearDeltas();
+
+		Iterations = Iterations + 1;
+
+		return (optimized || Iterations >= opts.Epochs);
+	}
+	
+	void Train(ManagedArray& input, ManagedArray& output, NeuralNetworkOptions opts)
+	{
+		Setup(output, opts);
+		
+		while (!Step(input, opts)) {}
 	}
 
 	void Free()
