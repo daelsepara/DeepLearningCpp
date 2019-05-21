@@ -9,19 +9,16 @@
 #include <stdexcept>
 #include <string>
 
-#include "Convn.hpp"
-#include "ConvolutionalNeuralNetwork.hpp"
 #include "ManagedCNN.hpp"
 #include "ManagedDNN.hpp"
 #include "ManagedNN.hpp"
-#include "NeuralNetwork.hpp"
 #include "OptimizerDNN.hpp"
 #include "OptimizerNN.hpp"
 
 #include "ManagedUtil.hpp"
 #include "Profiler.hpp"
 #include "Random.hpp"
-#include "Util.hpp"
+#include "ManagedUtil.hpp"
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 #define strdup _strdup
@@ -132,48 +129,56 @@ void Load2D(std::string filename, ManagedArray& input, ManagedArray& output, con
 	
 	while (std::getline(file, line))
     {
-		temp.push_back(std::vector<double>());
-		
-		auto current_line = strdup(line.c_str());
-		char* next_token = NULL;
-
-		#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-		
-			auto token = std::strtok_s(current_line, delimiter, &next_token);
-		
-		#else
-		
-			auto token = std::strtok(current_line, delimiter);
-		
-		#endif
-		
-		while (token != NULL)
+		if (std::strlen(line.c_str()) > 0)
 		{
-			auto value = atof(token);
+			temp.push_back(std::vector<double>());
 			
-			temp[examples].push_back(value);
+			auto current_line = strdup(line.c_str());
 			
+			char* next_token = NULL;
+
 			#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 			
-				token = std::strtok_s(NULL, delimiter, &next_token);
+				auto token = std::strtok_s(current_line, delimiter, &next_token);
 			
 			#else
 			
-				token = strtok(NULL, delimiter);
+				auto token = std::strtok(current_line, delimiter);
 			
 			#endif
+			
+			int tokens = 0;
+			
+			while (token != NULL)
+			{
+				tokens++;
+				
+				auto value = atof(token);
+				
+				temp[examples].push_back(value);
+				
+				#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+				
+					token = std::strtok_s(NULL, delimiter, &next_token);
+				
+				#else
+			
+					token = strtok(NULL, delimiter);
+			
+				#endif
+			}
+		
+			free(current_line);
+		
+			if (tokens > 0)
+				examples++;
 		}
-		
-		free(current_line);
-		
-		examples++;
     }
 
-	
 	auto sizey = (int)temp.size();
 	auto sizex = (int)temp[0].size();
 	inputs = sizex - 1;
-	
+
 	input.Resize(inputs, sizey, false);
 	output.Resize(1, sizey, false);
 	
@@ -193,6 +198,8 @@ void Load2D(std::string filename, ManagedArray& input, ManagedArray& output, con
 	}
 	
 	file.close();
+	
+
 }
 
 void DNNOptimizer(std::string InputData, int delimiter, double alpha, int epochs, double tolerance, std::vector<int> layers, bool save, std::string SaveDirectory, std::string SaveJSON)
@@ -367,6 +374,156 @@ void DNNTrainer(std::string InputData, int delimiter, double alpha, int epochs, 
 	}
 }
 
+void NNTrainer(std::string InputData, int delimiter, double alpha, int Nodes, int epochs, double tolerance, bool useL2, bool save, std::string SaveDirectory, std::string SaveJSON)
+{
+	std::string BaseDirectory = "./";
+	
+	if (std::strlen(InputData.c_str()) > 0)
+	{
+		auto Inputs = 0;
+		auto Categories = 0;
+		auto Examples = 0;
+		
+		auto input = ManagedArray();
+		auto output = ManagedArray();
+		
+		Load2D(InputData, input, output, delimiter == 0 ? "\t" : ",", Inputs, Categories, Examples);
+		
+		fprintf(stderr, "\n%d lines read with %d inputs and %d categories\n", Examples, Inputs, Categories);
+		
+		if (Inputs > 0 && Categories > 0 && Examples > 0 && Nodes > Inputs)
+		{	
+			auto opts = NeuralNetworkOptions(alpha, epochs, Categories, Inputs, Nodes, Examples, tolerance, useL2);
+			
+			auto nn = ManagedNN();
+			
+			auto start = Profiler::now();
+
+			printf("\nTraining Network...\n");
+
+			auto normalized_input = nn.Normalize(input);
+			auto normalized_test = nn.ApplyNormalization(input);
+
+			nn.Train(normalized_input, output, opts);
+
+			printf("Training Done\n");
+
+			printf("elapsed time is %ld ms\n", Profiler::Elapsed(start));
+
+			printf("Final Training error is %e\n", nn.Cost);
+			printf("L2 error is %e\n", nn.L2);
+			printf("Number of iterations: %d\n", nn.Iterations);
+
+			printf("\nNetwork Weights:\n");
+			printf("Weights Wji:\n");
+			ManagedMatrix::Print2D(nn.Wji);
+			printf("Weights Wkj:\n");
+			ManagedMatrix::Print2D(nn.Wkj);
+
+			printf("\nClassifying...\n");
+
+			start = Profiler::now();
+
+			auto classification = nn.Classify(normalized_test, opts, 0.9);
+
+			printf("Classification Done\n");
+
+			printf("elapsed time is %ld ms\n", Profiler::Elapsed(start));
+
+			if (save && std::strlen(SaveJSON.c_str()) > 0)
+			{
+				printf("\nSaving Deep Neural Network Parameters\n");
+
+				ManagedFile::SaveJSON(SaveDirectory.empty() ? BaseDirectory : SaveDirectory, SaveJSON, ManagedUtil::Serialize(nn));
+			}
+
+			nn.Free();
+
+			ManagedOps::Free(classification);
+			ManagedOps::Free(normalized_input);
+			ManagedOps::Free(normalized_test);
+		}
+		
+		ManagedOps::Free(input);
+		ManagedOps::Free(output);
+	}
+}
+
+void NNOptimizer(std::string InputData, int delimiter, double alpha, int Nodes, int epochs, double tolerance, bool save, std::string SaveDirectory, std::string SaveJSON)
+{
+	std::string BaseDirectory = "./";
+	
+	if (std::strlen(InputData.c_str()) > 0)
+	{
+		auto Inputs = 0;
+		auto Categories = 0;
+		auto Examples = 0;
+		
+		auto input = ManagedArray();
+		auto output = ManagedArray();
+		
+		Load2D(InputData, input, output, delimiter == 0 ? "\t" : ",", Inputs, Categories, Examples);
+		
+		fprintf(stderr, "\n%d lines read with %d inputs and %d categories\n", Examples, Inputs, Categories);
+		
+		if (Inputs > 0 && Categories > 0 && Examples > 0 && Nodes > Inputs)
+		{	
+			auto opts = NeuralNetworkOptions(alpha, epochs, Categories, Inputs, Nodes, Examples, tolerance);
+			
+			auto nn = OptimizerNN();
+			
+			auto start = Profiler::now();
+
+			printf("\nOptimizing Network...\n");
+
+			auto normalized_input = nn.Normalize(input);
+			auto normalized_test = nn.ApplyNormalization(input);
+
+			nn.Run(normalized_input, output, opts);
+
+			printf("Optimization Done\n");
+
+			printf("elapsed time is %ld ms\n", Profiler::Elapsed(start));
+
+			printf("Final Training error is %e\n", nn.Cost);
+			printf("L2 error is %e\n", nn.L2);
+			printf("Number of iterations: %d\n", nn.Iterations);
+
+			printf("\nNetwork Weights:\n");
+			printf("Weights Wji:\n");
+			ManagedMatrix::Print2D(nn.Wji);
+			printf("Weights Wkj:\n");
+			ManagedMatrix::Print2D(nn.Wkj);
+
+			printf("\nClassifying...\n");
+
+			start = Profiler::now();
+
+			auto classification = nn.Classify(normalized_test, opts, 0.9);
+
+			printf("Classification Done\n");
+
+			printf("elapsed time is %ld ms\n", Profiler::Elapsed(start));
+
+			if (save && std::strlen(SaveJSON.c_str()) > 0)
+			{
+				printf("\nSaving Deep Neural Network Parameters\n");
+
+				ManagedFile::SaveJSON(SaveDirectory.empty() ? BaseDirectory : SaveDirectory, SaveJSON, ManagedUtil::Serialize(nn));
+			}
+
+			nn.Free();
+
+			ManagedOps::Free(classification);
+			ManagedOps::Free(normalized_input);
+			ManagedOps::Free(normalized_test);
+		}
+		
+		ManagedOps::Free(input);
+		ManagedOps::Free(output);
+	}
+}
+
 int main(int argc, char** argv)
 {
 	// convolutional neural network parameters
@@ -375,7 +532,7 @@ int main(int argc, char** argv)
 	auto Pool = false;
 
 	// neural network parameters
-	auto hidden = 4;
+	auto nodes = 4;
 	auto tolerance = 0.0001;
 	
 	// deep neural networks layer configuration
@@ -402,6 +559,8 @@ int main(int argc, char** argv)
 	
 	auto RunDNNOptimizer = false;
 	auto RunDNNTrainer = false;
+	auto RunNNOptimizer = false;
+	auto RunNNTrainer = false;
 	
 	for (auto i = 0; i < argc; i++)
 	{
@@ -440,7 +599,15 @@ int main(int argc, char** argv)
 		{
 			RunDNNOptimizer = true;
 		}
-
+		else if (!arg.compare("/NN"))
+		{
+			RunNNTrainer = true;
+		}
+		else if (!arg.compare("/NMIN"))
+		{
+			RunNNOptimizer = true;
+		}
+		
 		if (!arg.compare(0, 9, "/SAVEDIR=") && arg.length() > 9)
 		{
 			#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
@@ -482,7 +649,7 @@ int main(int argc, char** argv)
 
 		ParseInt(arg, "/BATCH=", "Batch Size", batchsize);
 		ParseInt(arg, "/EPOCH=", "Epochs", epochs);
-		ParseInt(arg, "/NODES=", "Nodes per hidden layer (neural networks)", hidden);
+		ParseInt(arg, "/NODES=", "Nodes per hidden layer (neural networks)", nodes);
 		ParseInts(arg, "/LAYERS=", "hidden layer node configurations (deep neural networks)", Layers);
 		ParseDouble(arg, "/TOLERANCE=", "Error tolerance", tolerance);
 		ParseDouble(arg, "/ALPHA=", "Learning rate Alpha", alpha);
@@ -509,13 +676,19 @@ int main(int argc, char** argv)
 		fprintf(stderr, "Input training data: %s\n", InputData);
 	}
 	
-	Layers = Layers.size() > 0 ? Layers : std::vector<int>({ hidden, hidden });
+	Layers = Layers.size() > 0 ? Layers : std::vector<int>({ nodes, nodes });
 	
 	if (RunDNNOptimizer)
 		DNNOptimizer(InputData, delimiter, alpha, epochs, tolerance, Layers, save, SaveDirectory, SaveJSON);
 
 	if (RunDNNTrainer)
 		DNNTrainer(InputData, delimiter, alpha, epochs, tolerance, Layers, useL2, save, SaveDirectory, SaveJSON);
+
+	if (RunNNTrainer)
+		NNTrainer(InputData, delimiter, alpha, nodes, epochs, tolerance, useL2, save, SaveDirectory, SaveJSON);
 		
+	if (RunNNOptimizer)
+		NNOptimizer(InputData, delimiter, alpha, nodes, epochs, tolerance, save, SaveDirectory, SaveJSON);
+
 	return 0;
 }

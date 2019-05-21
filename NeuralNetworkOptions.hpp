@@ -26,6 +26,18 @@ public:
 		Tolerance = tolerance;
 	}
 
+	NeuralNetworkOptions(double alpha, int epochs, int categories, int inputs, int nodes, int items, double tolerance, bool useL2)
+	{
+		Alpha = alpha;
+		Epochs = epochs;
+		Inputs = inputs; // Input layer features (i)
+		Nodes = nodes; // Hidden layer nodes (j)
+		Items = items;	// number of input items
+		Categories = categories; // number of output categories (k)
+		Tolerance = tolerance;
+		UseL2 = useL2;
+	}
+
 	NeuralNetworkOptions(double alpha, int epochs, int categories, int inputs, int items, double tolerance, int hiddenLayers, bool useL2)
 	{
 		Alpha = alpha;
