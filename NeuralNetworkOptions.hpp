@@ -13,7 +13,7 @@ public:
 	int Categories;
 	double Tolerance;
 	int HiddenLayers;
-	bool UseL2;
+	bool UseL2 = false;
 
 	NeuralNetworkOptions(double alpha, int epochs, int categories, int inputs, int nodes, int items, double tolerance)
 	{
