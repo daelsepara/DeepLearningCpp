@@ -7,8 +7,6 @@
 #include "ManagedConvolution.hpp"
 #include "ManagedOps.hpp"
 
-#define FAST_MATRIX_MULTIPLY
-
 class ManagedMatrix
 {
 public:
