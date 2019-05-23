@@ -503,6 +503,16 @@ public:
 			}
 		}
 	}
+	
+	// Expand a matrix A[x][y] by [ex][ey]
+	static ManagedArray Expand(ManagedArray& A, int expandx, int expandy)
+	{
+		ManagedArray output;
+		
+		Expand(A, expandx, expandy, output);
+		
+		return output;
+	}
 
 	// Create a 2D Diagonal/Identity matrix of size [dim][dim]
 	static ManagedArray Diag(int dim)
