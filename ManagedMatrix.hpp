@@ -7,6 +7,8 @@
 #include "ManagedConvolution.hpp"
 #include "ManagedOps.hpp"
 
+#define FAST_MATRIX_MULTIPLY
+
 class ManagedMatrix
 {
 public:
@@ -158,24 +160,73 @@ public:
 		return dst;
 	}
 
-	// 2D Matrix multiplication
+	#ifndef FAST_MATRIX_MULTIPLY
+	// 2D Matrix multiplication - Naive Version
 	static void Multiply(ManagedArray& result, ManagedArray& A, ManagedArray& B)
 	{
 		if (A.x == B.y)
 		{
-			result.Resize(B.x, A.y, false);
+			// Naive version
+			result.Resize(B.x, A.y, true);
 
 			for (auto y = 0; y < A.y; y++)
 			{
 				for (auto x = 0; x < B.x; x++)
 				{
-					result(x, y) = 0.0;
-
 					for (auto k = 0; k < A.x; k++)
 					{
 						result(x, y) += A(k, y) * B(x, k);
 					}
 				}
+			}
+		}
+
+	}
+	
+	static ManagedArray Multiply(ManagedArray& A, ManagedArray& B)
+	{
+		ManagedArray result;
+
+		NaiveMultiply(result, A, B);
+
+		return result;
+	}
+	#else
+	
+	// 2D Matrix multiplication
+	// slightly faster (due to memory access pattern) but still naive
+	// see: https://tavianator.com/a-quick-trick-for-faster-naive-matrix-multiplication/
+	static void Multiply(ManagedArray& result, ManagedArray& A, ManagedArray& B)
+	{
+		if (A.x == B.y)
+		{
+			auto dest = 0;
+			auto lhs = 0;
+			auto rhs = 0;
+			auto mid = A.x;
+			auto cols = B.x;
+			auto rows = A.y;
+
+			result.Resize(cols, rows, true);
+
+			for (auto y = 0; y < rows; y++)
+			{
+				rhs = 0;
+				
+				for (auto x = 0; x < mid; x++)
+				{
+					auto lhsx = lhs + x;
+
+					for (auto k = 0; k < cols; k++)
+					{
+						result(dest + k) += A(lhsx) * B(rhs + k);
+					}
+
+					rhs += cols;
+				}
+
+				dest += cols;
+				lhs += mid;
 			}
 		}
 	}
@@ -189,7 +240,8 @@ public:
 
 		return result;
 	}
-
+	#endif
+	
 	// Matrix * Constant Multiplication
 	static void Multiply(ManagedArray& A, double B)
 	{
