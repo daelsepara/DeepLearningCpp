@@ -167,12 +167,14 @@ public:
 		if (A.x == B.y)
 		{
 			// Naive version
-			result.Resize(B.x, A.y, true);
+			result.Resize(B.x, A.y, false);
 
 			for (auto y = 0; y < A.y; y++)
 			{
 				for (auto x = 0; x < B.x; x++)
 				{
+					result(x, y) = 0.0;
+					 
 					for (auto k = 0; k < A.x; k++)
 					{
 						result(x, y) += A(k, y) * B(x, k);
@@ -187,7 +189,7 @@ public:
 	{
 		ManagedArray result;
 
-		NaiveMultiply(result, A, B);
+		Multiply(result, A, B);
 
 		return result;
 	}
