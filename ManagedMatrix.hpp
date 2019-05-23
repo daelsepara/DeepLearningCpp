@@ -158,7 +158,8 @@ public:
 		return dst;
 	}
 
-	#ifndef FAST_MATRIX_MULTIPLY
+	#if !defined (FAST_MATRIX_MULTIPLY)
+	
 	// 2D Matrix multiplication - Naive Version
 	static void Multiply(ManagedArray& result, ManagedArray& A, ManagedArray& B)
 	{
@@ -180,17 +181,8 @@ public:
 				}
 			}
 		}
-
 	}
 	
-	static ManagedArray Multiply(ManagedArray& A, ManagedArray& B)
-	{
-		ManagedArray result;
-
-		Multiply(result, A, B);
-
-		return result;
-	}
 	#else
 	
 	// 2D Matrix multiplication
@@ -230,6 +222,7 @@ public:
 			}
 		}
 	}
+	#endif
 
 	// 2D Matrix multiplication
 	static ManagedArray Multiply(ManagedArray& A, ManagedArray& B)
@@ -240,7 +233,6 @@ public:
 
 		return result;
 	}
-	#endif
 	
 	// Matrix * Constant Multiplication
 	static void Multiply(ManagedArray& A, double B)
