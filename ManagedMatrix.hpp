@@ -234,6 +234,30 @@ public:
 		return result;
 	}
 	
+	static ManagedArray Pow(ManagedArray& A, double power)
+	{
+		auto result = ManagedArray(A.x, A.y, A.z, A.i, A.j, false);
+
+		for (auto x = 0; x < A.Length(); x++)
+		{
+			result(x) = std::pow(A(x), power);
+		}
+
+		return result;
+	}
+
+	static ManagedArray Pow(double A, ManagedArray& powers)
+	{
+		auto result = ManagedArray(powers.x, powers.y, powers.z, powers.i, powers.j, false);
+
+		for (auto i = 0; i < powers.Length(); i++)
+		{
+			result(i) = std::pow(A, powers(i));
+		}
+
+		return result;
+	}
+        
 	// Matrix * Constant Multiplication
 	static void Multiply(ManagedArray& A, double B)
 	{
@@ -256,6 +280,19 @@ public:
 	static void Product(ManagedArray& A, ManagedArray& B)
 	{
 		Product(A, A, B);
+	}
+	
+	// Element by element multiplication
+	static ManagedArray BSXMUL(ManagedArray& A, ManagedArray& B)
+	{
+		auto result = ManagedArray(A.x, A.y, A.z, A.i, A.j, false);
+
+		for (auto x = 0; x < A.Length(); x++)
+		{
+			result(x) = A(x) * B(x);
+		}
+
+		return result;
 	}
 
 	// Matrix Addition
@@ -506,6 +543,55 @@ public:
 		return output;
 	}
 
+	// Transforms x into a column vector
+	static void Vector(ManagedArray& x)
+	{
+		auto temp = Transpose(x);
+
+		x.Reshape(1, x.Length());
+
+		for (auto i = 0; i < x.Length(); i++)
+		{
+			x(i) = temp(i);
+		}
+
+		ManagedOps::Free(temp);
+	}
+
+	static ManagedArray RowSums(ManagedArray& A)
+	{
+		auto result = ManagedArray(1, A.y);
+
+		for (auto i = 0; i < A.y; i++)
+		{
+			result(i) = 0.0;
+
+			for (auto j = 0; j < A.x; j++)
+			{
+				result(i) += A(j, i);
+			}
+		}
+
+		return result;
+	}
+
+	static ManagedArray ColSums(ManagedArray& A)
+	{
+		auto result = ManagedArray(A.x, 1);
+
+		for (auto j = 0; j < A.x; j++)
+		{
+			result(j) = 0.0;
+
+			for (auto i = 0; i < A.y; i++)
+			{
+				result(j) += A(j, i);
+			}
+		}
+
+		return result;
+	}
+        
 	// Create a 2D Diagonal/Identity matrix of size [dim][dim]
 	static ManagedArray Diag(int dim)
 	{
@@ -527,6 +613,12 @@ public:
 		{
 			return NULL;
 		}
+	}
+	
+	static void Sqrt(ManagedArray& x)
+	{
+		for (auto i = 0; i < x.Length(); i++)
+			x(i) = std::sqrt(x(i));
 	}
 };
 #endif
