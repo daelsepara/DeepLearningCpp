@@ -476,5 +476,30 @@ public:
 
 		return classification;
 	}
+
+	static void SaveClassification(std::string BaseDirectory, std::string BaseFileName, ManagedIntList classification)
+	{
+		char buffer[200];
+
+		#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+		
+			sprintf_s(buffer, "%s/%s.txt", BaseDirectory.c_str(), BaseFileName.c_str());
+
+		#else
+		
+			sprintf(buffer, "%s/%s.txt", BaseDirectory.c_str(), BaseFileName.c_str());
+		
+		#endif
+
+		std::string filename = buffer;
+		std::ofstream file(filename);
+
+		for (auto y = 0; y < classification.Length(); y++)
+		{
+			file << classification(y) << std::endl;
+		}
+
+		file.close();
+	}
 };
 #endif
