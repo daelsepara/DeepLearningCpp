@@ -19,6 +19,12 @@ public:
 			dst(i) = value;
 	}
 
+	static void Set(ManagedIntList& dst, int value)
+	{
+		for (auto i = 0; i < dst.Length(); i++)
+			dst(i) = value;
+	}
+
 	// Copy 2D[minx + x][miny + y]
 	static void Copy2D(ManagedArray& dst, ManagedArray& src, int minx, int miny)
 	{
