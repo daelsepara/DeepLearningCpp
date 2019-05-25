@@ -21,40 +21,40 @@ public:
 			if (!vert)
 			{
 				if (x > 0)
-					printf(" ");
+					fprintf(stderr, " ");
 			}
 			else
 			{
-				printf("%d: ", x);
+				fprintf(stderr, "%d: ", x);
 			}
 
-			printf("%d", input(x));
+			fprintf(stderr, "%d", input(x));
 
 			if (vert)
-				printf("\n");
+				fprintf(stderr, "\n");
 		}
 
 		if (!vert)
-			printf("\n");
+			fprintf(stderr, "\n");
 	}
 
 	static void Print2D(ManagedArray& input)
 	{
 		for (auto y = 0; y < input.y; y++)
 		{
-			printf("%d: ", y);
+			fprintf(stderr, "%d: ", y);
 
 			for (auto x = 0; x < input.x; x++)
 			{
 				if (x > 0)
 				{
-					printf(" ");
+					fprintf(stderr, " ");
 				}
 
-				printf("%1.2g", input(x, y));
+				fprintf(stderr, "%1.2g", input(x, y));
 			}
 
-			printf("\n");
+			fprintf(stderr, "\n");
 		}
 	}
 
@@ -62,23 +62,23 @@ public:
 	{
 		for (auto z = 0; z < input.z; z++)
 		{
-			printf("[, , %d]\n", z);
+			fprintf(stderr, "[, , %d]\n", z);
 
 			for (auto y = 0; y < input.y; y++)
 			{
-				printf("%d: ", y);
+				fprintf(stderr, "%d: ", y);
 
 				for (auto x = 0; x < input.x; x++)
 				{
 					if (x > 0)
 					{
-						printf(" ");
+						fprintf(stderr, " ");
 					}
 
-					printf("%1.2g", input(x, y, z));
+					fprintf(stderr, "%1.2g", input(x, y, z));
 				}
 
-				printf("\n");
+				fprintf(stderr, "\n");
 			}
 		}
 	}
@@ -87,23 +87,23 @@ public:
 	{
 		for (auto z = 0; z < input.z; z++)
 		{
-			printf("[, , %d]\n", z);
+			fprintf(stderr, "[, , %d]\n", z);
 
 			for (auto y = 0; y < input.y; y++)
 			{
-				printf("%d: ", y);
+				fprintf(stderr, "%d: ", y);
 
 				for (auto x = 0; x < input.x; x++)
 				{
 					if (x > 0)
 					{
-						printf(" ");
+						fprintf(stderr, " ");
 					}
 
-					printf("%1.2g", input(((i * input.z + z) * input.y + y) * input.x + x));
+					fprintf(stderr, "%1.2g", input(((i * input.z + z) * input.y + y) * input.x + x));
 				}
 
-				printf("\n");
+				fprintf(stderr, "\n");
 			}
 		}
 	}
@@ -115,19 +115,19 @@ public:
 
 		for (auto y = 0; y < input.y; y++)
 		{
-			printf("%d: ", y);
+			fprintf(stderr, "%d: ", y);
 
 			for (auto x = 0; x < input.x; x++)
 			{
 				if (x > 0)
 				{
-					printf(" ");
+					fprintf(stderr, " ");
 				}
 
-				printf("%1.2g", input(srcoffset + y * input.x + x));
+				fprintf(stderr, "%1.2g", input(srcoffset + y * input.x + x));
 			}
 
-			printf("\n");
+			fprintf(stderr, "\n");
 		}
 	}
 
