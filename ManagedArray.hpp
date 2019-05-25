@@ -43,7 +43,12 @@ public:
 	{
 		return Data[ix];
 	}
-
+	
+	int Length()
+	{
+		return x;
+	}
+	
 	void Free()
 	{
 		_Free(Data);
