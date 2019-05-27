@@ -308,11 +308,21 @@ public:
 			
 			auto layers = (int)j["Weights"].size();
 			
-			network.Weights.resize(layers);
-			
+			network.Weights.clear();
+			network.X.clear();
+			network.Z.clear();
+			network.Activations.clear();
+
 			for (auto layer = 0; layer < layers; layer++)
 			{
 				network.Weights.push_back(Parse2D(j, "Weights", layer));
+				network.X.push_back(ManagedArray());
+				network.Z.push_back(ManagedArray());
+				network.Deltas.push_back(ManagedArray());
+				network.D.push_back(ManagedArray());
+
+				if (layer < layers - 1)
+					network.Activations.push_back(ManagedArray());
 			}
 			
 			network.Min = Vector1D(j, "Normalization", 0);

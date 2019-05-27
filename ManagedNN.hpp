@@ -240,7 +240,7 @@ public:
 		return result;
 	}
 
-	ManagedIntList Classify(ManagedArray& test, NeuralNetworkOptions opts, double threshold = 0.5)
+	ManagedIntList Classify(ManagedArray& test, double threshold = 0.5)
 	{
 		Forward(test);
 
@@ -248,12 +248,12 @@ public:
 
 		for (auto y = 0; y < test.y; y++)
 		{
-			if (opts.Categories > 1)
+			if (Y.x > 1)
 			{
 				auto maxval = 0.0;
 				auto maxind = 0;
 
-				for (auto x = 0; x < opts.Categories; x++)
+				for (auto x = 0; x < Y.x; x++)
 				{
 					auto val = Y(x, y);
 
@@ -279,7 +279,7 @@ public:
 		return classification;
 	}
 
-	ManagedArray Predict(ManagedArray& test, NeuralNetworkOptions opts)
+	ManagedArray Predict(ManagedArray& test)
 	{
 		Forward(test);
 
@@ -287,11 +287,11 @@ public:
 
 		for (auto y = 0; y < test.y; y++)
 		{
-			if (opts.Categories > 1)
+			if (Y.x > 1)
 			{
 				auto maxval = 0.0;
 
-				for (auto x = 0; x < opts.Categories; x++)
+				for (auto x = 0; x < Y.x; x++)
 				{
 					auto val = Y(x, y);
 

@@ -4,7 +4,6 @@
 #include <cstdio>
 
 #include "ManagedArray.hpp"
-#include "ManagedConvolution.hpp"
 #include "ManagedOps.hpp"
 
 class ManagedMatrix

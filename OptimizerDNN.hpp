@@ -247,7 +247,7 @@ public:
 		return result;
 	}
 
-	ManagedArray Predict(ManagedArray& test, NeuralNetworkOptions opts)
+	ManagedArray Predict(ManagedArray& test)
 	{
 		Forward(test);
 
@@ -255,11 +255,11 @@ public:
 
 		for (int y = 0; y < test.y; y++)
 		{
-			if (opts.Categories > 1)
+			if (Y.x > 1)
 			{
 				double maxval = std::numeric_limits<double>::lowest();
 
-				for (int x = 0; x < opts.Categories; x++)
+				for (int x = 0; x < Y.x; x++)
 				{
 					double val = Y(x, y);
 
@@ -290,7 +290,7 @@ public:
 		return prediction;
 	}
 
-	ManagedIntList Classify(ManagedArray& test, NeuralNetworkOptions opts, double threshold = 0.5)
+	ManagedIntList Classify(ManagedArray& test, double threshold = 0.5)
 	{
 		Forward(test);
 
@@ -298,12 +298,12 @@ public:
 
 		for (int y = 0; y < test.y; y++)
 		{
-			if (opts.Categories > 1)
+			if (Y.x > 1)
 			{
 				double maxval = std::numeric_limits<double>::lowest();
 				int maxind = 0;
 
-				for (int x = 0; x < opts.Categories; x++)
+				for (int x = 0; x < Y.x; x++)
 				{
 					double val = Y(x, y);
 
