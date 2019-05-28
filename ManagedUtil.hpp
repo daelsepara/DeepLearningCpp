@@ -312,6 +312,8 @@ public:
 			network.X.clear();
 			network.Z.clear();
 			network.Activations.clear();
+			network.Deltas.clear();
+			network.D.clear();
 
 			for (auto layer = 0; layer < layers; layer++)
 			{
