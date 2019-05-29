@@ -1,7 +1,8 @@
 #ifndef MANAGED_MATRIX_HPP
 #define MANAGED_MATRIX_HPP
 
-#include <cstdio>
+#include <iostream>
+#include <iomanip>
 
 #include "ManagedArray.hpp"
 #include "ManagedOps.hpp"
@@ -20,40 +21,40 @@ public:
 			if (!vert)
 			{
 				if (x > 0)
-					fprintf(stderr, " ");
+					std::cerr << " ";
 			}
 			else
 			{
-				fprintf(stderr, "%d: ", x);
+				std::cerr << x << ": ";
 			}
 
-			fprintf(stderr, "%d", input(x));
+			std::cerr << input(x);
 
 			if (vert)
-				fprintf(stderr, "\n");
+				std::cerr << std::endl;
 		}
 
 		if (!vert)
-			fprintf(stderr, "\n");
+			std::cerr << std::endl;
 	}
 
 	static void Print2D(ManagedArray& input)
 	{
 		for (auto y = 0; y < input.y; y++)
 		{
-			fprintf(stderr, "%d: ", y);
+			std::cerr << y << ": ";
 
 			for (auto x = 0; x < input.x; x++)
 			{
 				if (x > 0)
 				{
-					fprintf(stderr, " ");
+					std::cerr << " ";
 				}
 
-				fprintf(stderr, "%1.2g", input(x, y));
+				std::cerr << std::setprecision(2) << std::scientific << input(x, y);
 			}
 
-			fprintf(stderr, "\n");
+			std::cerr << std::endl;
 		}
 	}
 
@@ -61,23 +62,23 @@ public:
 	{
 		for (auto z = 0; z < input.z; z++)
 		{
-			fprintf(stderr, "[, , %d]\n", z);
+			std::cerr << "[, , " << z << "]" << std::endl;
 
 			for (auto y = 0; y < input.y; y++)
 			{
-				fprintf(stderr, "%d: ", y);
+				std::cerr << y << ": ";
 
 				for (auto x = 0; x < input.x; x++)
 				{
 					if (x > 0)
 					{
-						fprintf(stderr, " ");
+						std::cerr << " ";
 					}
 
-					fprintf(stderr, "%1.2g", input(x, y, z));
+					std::cerr << std::setprecision(2) << std::scientific << input(x, y, z);
 				}
 
-				fprintf(stderr, "\n");
+				std::cerr << std::endl;
 			}
 		}
 	}
@@ -86,23 +87,23 @@ public:
 	{
 		for (auto z = 0; z < input.z; z++)
 		{
-			fprintf(stderr, "[, , %d]\n", z);
+			std::cerr << "[, , " << z << "]" << std::endl;
 
 			for (auto y = 0; y < input.y; y++)
 			{
-				fprintf(stderr, "%d: ", y);
+				std::cerr << y << ": ";
 
 				for (auto x = 0; x < input.x; x++)
 				{
 					if (x > 0)
 					{
-						fprintf(stderr, " ");
+						std::cerr << " ";
 					}
 
-					fprintf(stderr, "%1.2g", input(((i * input.z + z) * input.y + y) * input.x + x));
+					std::cerr << std::setprecision(2) << std::scientific << input(((i * input.z + z) * input.y + y) * input.x + x);
 				}
 
-				fprintf(stderr, "\n");
+				std::cerr << std::endl;
 			}
 		}
 	}
@@ -114,19 +115,19 @@ public:
 
 		for (auto y = 0; y < input.y; y++)
 		{
-			fprintf(stderr, "%d: ", y);
+			std::cerr << y << ": ";
 
 			for (auto x = 0; x < input.x; x++)
 			{
 				if (x > 0)
 				{
-					fprintf(stderr, " ");
+					std::cerr << " ";
 				}
-
-				fprintf(stderr, "%1.2g", input(srcoffset + y * input.x + x));
+				
+				std::cerr << std::setprecision(2) << std::scientific << input(srcoffset + y * input.x + x);
 			}
 
-			fprintf(stderr, "\n");
+			std::cerr << std::endl;
 		}
 	}
 

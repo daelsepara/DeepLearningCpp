@@ -314,9 +314,14 @@ public:
 			network.Activations.clear();
 			network.Deltas.clear();
 			network.D.clear();
-
+			network.Layers.clear();
+			
 			for (auto layer = 0; layer < layers; layer++)
 			{
+				auto lx = (int)j["Weights"][layer][0].size() - 1;
+				auto ly = (int)j["Weights"][layer].size();
+
+				network.Layers.push_back(HiddenLayer(lx, ly));
 				network.Weights.push_back(Parse2D(j, "Weights", layer));
 				network.X.push_back(ManagedArray());
 				network.Z.push_back(ManagedArray());
