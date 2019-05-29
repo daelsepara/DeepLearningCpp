@@ -751,67 +751,27 @@ int main(int argc, char** argv)
 
 		if (!arg.compare(0, 9, "/SAVEDIR=") && arg.length() > 9)
 		{
-			#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-
-				strncpy_s(SaveDirectory, &argv[i][9], sizeof(SaveDirectory));
-			
-			#else
-
-				strncpy(SaveDirectory, &argv[i][9], sizeof(SaveDirectory));
-
-			#endif
+			std::copy(&argv[i][9], &argv[i][9] + sizeof(SaveDirectory), SaveDirectory);
 		}
 
 		if (!arg.compare(0, 6, "/JSON=") && arg.length() > 6)
 		{
-			#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-			
-			strncpy_s(SaveJSON, &argv[i][6], sizeof(SaveJSON));
-
-			#else
-				
-				strncpy(SaveJSON, &argv[i][6], sizeof(SaveJSON));
-
-			#endif
+			std::copy(&argv[i][6], &argv[i][6] + sizeof(SaveJSON), SaveJSON);
 		}
 		
 		if (!arg.compare(0, 7, "/INPUT=") && arg.length() > 7)
 		{
-			#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-			
-			strncpy_s(InputData, &argv[i][7], sizeof(InputData));
-
-			#else
-				
-				strncpy(InputData, &argv[i][7], sizeof(InputData));
-
-			#endif
+			std::copy(&argv[i][7], &argv[i][7] + sizeof(InputData), InputData);
 		}
 
 		if (!arg.compare(0, 7, "/MODEL=") && arg.length() > 7)
 		{
-			#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-			
-			strncpy_s(ModelFile, &argv[i][7], sizeof(ModelFile));
-
-			#else
-				
-				strncpy(ModelFile, &argv[i][7], sizeof(ModelFile));
-
-			#endif
+			std::copy(&argv[i][7], &argv[i][7] + sizeof(ModelFile), ModelFile);
 		}
 
 		if (!arg.compare(0, 5, "/TXT=") && arg.length() > 5)
 		{
-			#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-			
-			strncpy_s(ClassificationFile, &argv[i][5], sizeof(ClassificationFile));
-
-			#else
-				
-				strncpy(ClassificationFile, &argv[i][5], sizeof(ClassificationFile));
-
-			#endif
+			std::copy(&argv[i][5], &argv[i][5] + sizeof(ClassificationFile), ClassificationFile);
 		}
 
 		ParseInt(arg, "/BATCH=", "Batch Size", batchsize);
