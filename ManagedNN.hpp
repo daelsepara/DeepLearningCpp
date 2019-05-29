@@ -136,11 +136,11 @@ public:
 		ManagedMatrix::Add(Wji, DeltaWji, -opts.Alpha);
 	}
 
-	void Rand(ManagedArray& rand, Random random)
+	void Rand(ManagedArray& rnd, Random random)
 	{
-		for (auto x = 0; x < rand.Length(); x++)
+		for (auto x = 0; x < rnd.Length(); x++)
 		{
-			rand(x) = (random.NextDouble() - 0.5) * 2.0;
+			rnd(x) = (random.NextDouble() - 0.5) * 2.0;
 		}
 	}
 

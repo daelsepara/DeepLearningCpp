@@ -18,9 +18,11 @@ public:
 	std::vector<HiddenLayer> Layers;
 	std::vector<ManagedArray> Weights;
 	std::vector<ManagedArray> Deltas;
+	
 	// intermediate results
 	std::vector<ManagedArray> X;
 	std::vector<ManagedArray> Z;
+	
 	// internal use
 	std::vector<ManagedArray> Activations;
 	std::vector<ManagedArray> D;

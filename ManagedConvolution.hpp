@@ -29,13 +29,13 @@ public:
 		auto dy = (double)(filter.y - 1) / 2;
 		auto dz = (double)(filter.z - 1) / 2;
 
-		auto minx = (int)ceil(dx);
-		auto miny = (int)ceil(dy);
-		auto minz = (int)ceil(dz);
+		auto minx = (int)std::ceil(dx);
+		auto miny = (int)std::ceil(dy);
+		auto minz = (int)std::ceil(dz);
 
-		auto maxx = (int)ceil((double)cx - dx - 1);
-		auto maxy = (int)ceil((double)cy - dy - 1);
-		auto maxz = (int)ceil((double)cz - dz - 1);
+		auto maxx = (int)std::ceil((double)cx - dx - 1);
+		auto maxy = (int)std::ceil((double)cy - dy - 1);
+		auto maxz = (int)std::ceil((double)cz - dz - 1);
 
 		auto limx = maxx - minx + 1;
 		auto limy = maxy - miny + 1;

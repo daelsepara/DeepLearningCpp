@@ -132,11 +132,11 @@ public:
 		Rand(Weights, random, features, classes);
 	}
 
-	void Rand(ManagedArray& rand, Random random, int fan_in, int fan_out)
+	void Rand(ManagedArray& rnd, Random random, int fan_in, int fan_out)
 	{
-		for (auto x = 0; x < rand.Length(); x++)
+		for (auto x = 0; x < rnd.Length(); x++)
 		{
-			rand(x) = (random.NextDouble() - 0.5) * 2.0 * sqrt(6.0 / ((double)(fan_in + fan_out)));
+			rnd(x) = (random.NextDouble() - 0.5) * 2.0 * sqrt(6.0 / ((double)(fan_in + fan_out)));
 		}
 	}
 
