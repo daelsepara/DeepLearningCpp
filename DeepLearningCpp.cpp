@@ -153,7 +153,7 @@ void Load2D(std::string filename, ManagedArray& input, ManagedArray& output, con
 			{
 				tokens++;
 				
-				auto value = atof(token);
+				auto value = strtod(token, NULL);
 				
 				temp[examples].push_back(value);
 				
@@ -235,8 +235,8 @@ void Load2D(std::string filename, ManagedArray& input, const char* delimiter, in
 			{
 				tokens++;
 				
-				auto value = atof(token);
-				
+				auto value = strtod(token, NULL);
+
 				temp[samples].push_back(value);
 				
 				#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
@@ -304,7 +304,6 @@ void DNNOptimizer(std::string InputData, int delimiter, double alpha, int epochs
 			dnn.SetupHiddenLayers(opts.Inputs, opts.Categories, layers);
 
 			auto normalized_input = dnn.Normalize(input);
-			auto normalized_test = dnn.ApplyNormalization(input);
 
 			dnn.Run(normalized_input, output, opts);
 
@@ -331,16 +330,6 @@ void DNNOptimizer(std::string InputData, int delimiter, double alpha, int epochs
 				ManagedMatrix::Print2D(dnn.Weights[layer]);
 			}
 
-			std::cerr << std::endl << "Classifying..." << std::endl;
-
-			start = Profiler::now();
-
-			auto classification = dnn.Classify(normalized_test, 0.9);
-
-			std::cerr << "Classification Done" << std::endl;
-
-			std::cerr << "elapsed time is " << Profiler::Elapsed(start) << " ms" << std::endl;
-
 			if (save && std::strlen(SaveJSON.c_str()) > 0)
 			{
 				std::cerr << std::endl << "Saving Deep Neural Network Parameters" << std::endl;
@@ -350,9 +339,7 @@ void DNNOptimizer(std::string InputData, int delimiter, double alpha, int epochs
 
 			dnn.Free();
 
-			ManagedOps::Free(classification);
 			ManagedOps::Free(normalized_input);
-			ManagedOps::Free(normalized_test);
 		}
 		
 		ManagedOps::Free(input);
@@ -390,7 +377,6 @@ void DNNTrainer(std::string InputData, int delimiter, double alpha, int epochs, 
 			dnn.SetupHiddenLayers(opts.Inputs, opts.Categories, layers);
 
 			auto normalized_input = dnn.Normalize(input);
-			auto normalized_test = dnn.ApplyNormalization(input);
 
 			dnn.Train(normalized_input, output, opts);
 
@@ -417,16 +403,6 @@ void DNNTrainer(std::string InputData, int delimiter, double alpha, int epochs, 
 				ManagedMatrix::Print2D(dnn.Weights[layer]);
 			}
 
-			std::cerr << std::endl << "Classifying..." << std::endl;
-
-			start = Profiler::now();
-
-			auto classification = dnn.Classify(normalized_test, 0.9);
-
-			std::cerr << "Classification Done" << std::endl;
-
-			std::cerr << "elapsed time is " << Profiler::Elapsed(start) << " ms" << std::endl;
-			
 			if (save && std::strlen(SaveJSON.c_str()) > 0)
 			{
 				std::cerr << std::endl << "Saving Deep Neural Network Parameters" << std::endl;
@@ -436,9 +412,7 @@ void DNNTrainer(std::string InputData, int delimiter, double alpha, int epochs, 
 
 			dnn.Free();
 
-			ManagedOps::Free(classification);
 			ManagedOps::Free(normalized_input);
-			ManagedOps::Free(normalized_test);
 		}
 		
 		ManagedOps::Free(input);
@@ -527,7 +501,6 @@ void NNTrainer(std::string InputData, int delimiter, double alpha, int Nodes, in
 			std::cerr << std::endl << "Training Network..." << std::endl;
 
 			auto normalized_input = nn.Normalize(input);
-			auto normalized_test = nn.ApplyNormalization(input);
 
 			nn.Train(normalized_input, output, opts);
 
@@ -545,16 +518,6 @@ void NNTrainer(std::string InputData, int delimiter, double alpha, int Nodes, in
 			std::cerr << "Weights Wkj:" << std::endl;
 			ManagedMatrix::Print2D(nn.Wkj);
 
-			std::cerr << std::endl << "Classifying..." << std::endl;
-
-			start = Profiler::now();
-
-			auto classification = nn.Classify(normalized_test, 0.9);
-
-			std::cerr << "Classification Done" << std::endl;
-			
-			std::cerr << "elapsed time is " << Profiler::Elapsed(start) << " ms" << std::endl;
-
 			if (save && std::strlen(SaveJSON.c_str()) > 0)
 			{
 				std::cerr << std::endl << "Saving Neural Network Parameters" << std::endl;
@@ -564,9 +527,7 @@ void NNTrainer(std::string InputData, int delimiter, double alpha, int Nodes, in
 
 			nn.Free();
 
-			ManagedOps::Free(classification);
 			ManagedOps::Free(normalized_input);
-			ManagedOps::Free(normalized_test);
 		}
 		
 		ManagedOps::Free(input);
@@ -602,7 +563,6 @@ void NNOptimizer(std::string InputData, int delimiter, double alpha, int Nodes, 
 			std::cerr << std::endl << "Optimizing Network..." << std::endl;
 
 			auto normalized_input = nn.Normalize(input);
-			auto normalized_test = nn.ApplyNormalization(input);
 
 			nn.Run(normalized_input, output, opts);
 
@@ -620,16 +580,6 @@ void NNOptimizer(std::string InputData, int delimiter, double alpha, int Nodes, 
 			std::cerr << "Weights Wkj:" << std::endl;
 			ManagedMatrix::Print2D(nn.Wkj);
 
-			std::cerr << std::endl << "Classifying..." << std::endl;
-
-			start = Profiler::now();
-
-			auto classification = nn.Classify(normalized_test, 0.9);
-
-			std::cerr << "Classification Done" << std::endl;
-			
-			std::cerr << "elapsed time is " << Profiler::Elapsed(start) << " ms" << std::endl;
-
 			if (save && std::strlen(SaveJSON.c_str()) > 0)
 			{
 				std::cerr << std::endl << "Saving Neural Network Parameters" << std::endl;
@@ -639,9 +589,7 @@ void NNOptimizer(std::string InputData, int delimiter, double alpha, int Nodes, 
 
 			nn.Free();
 
-			ManagedOps::Free(classification);
 			ManagedOps::Free(normalized_input);
-			ManagedOps::Free(normalized_test);
 		}
 		
 		ManagedOps::Free(input);
