@@ -36,13 +36,13 @@ void ParseInt(std::string arg, const char* str, const char* var, int& dst)
 			{
 				auto val = stoi(arg.substr(len));
 
-				fprintf(stderr, "... %s = %d\n", var, val);
+				std::cerr << "... " << var << " = " << val << std::endl;
 
 				dst = val;
 			}
 			catch (const std::invalid_argument & ia)
 			{
-				fprintf(stderr, "... %s = NaN %s\n", var, ia.what());
+				std::cerr << "... " << var << " = NaN " << ia.what() << std::endl;
 				exit(1);
 			}
 		}
@@ -83,7 +83,7 @@ void ParseInts(std::string arg, const char* str, const char* var, std::vector<in
 			}
 			catch (const std::invalid_argument & ia)
 			{
-				fprintf(stderr, "... %s = NaN %s\n", var, ia.what());
+				std::cerr << "... " << var << " = NaN " << ia.what() << std::endl;
 				exit(1);
 			}
 		}
@@ -102,13 +102,13 @@ void ParseDouble(std::string arg, const char* str, const char* var, double& dst)
 			{
 				auto val = stod(arg.substr(len));
 
-				fprintf(stderr, "... %s = %e\n", var, val);
+				std::cerr << "... " << var << " = " << std::scientific << val << std::endl;
 
 				dst = val;
 			}
 			catch (const std::invalid_argument & ia)
 			{
-				fprintf(stderr, "... %s = NaN %s\n", var, ia.what());
+				std::cerr << "... " << var << " = NaN " << ia.what() << std::endl;
 
 				exit(1);
 			}
@@ -289,7 +289,7 @@ void DNNOptimizer(std::string InputData, int delimiter, double alpha, int epochs
 		
 		Load2D(InputData, input, output, delimiter == 0 ? "\t" : ",", Inputs, Categories, Examples);
 		
-		fprintf(stderr, "\n%d lines read with %d inputs and %d categories\n", Examples, Inputs, Categories);
+		std::cerr << std::endl << Examples <<" lines read with " << Inputs <<" inputs and " << Categories << " categories" << std::endl;
 		
 		if (Inputs > 0 && Categories > 0 && Examples > 0 && layers.size() > 0)
 		{
@@ -299,8 +299,8 @@ void DNNOptimizer(std::string InputData, int delimiter, double alpha, int epochs
 
 			auto start = Profiler::now();
 
-			printf("\nOptimizing Network...\n");
-
+			std::cerr << std::endl << "Optimizing Network..." << std::endl;
+			
 			dnn.SetupHiddenLayers(opts.Inputs, opts.Categories, layers);
 
 			auto normalized_input = dnn.Normalize(input);
@@ -308,42 +308,42 @@ void DNNOptimizer(std::string InputData, int delimiter, double alpha, int epochs
 
 			dnn.Run(normalized_input, output, opts);
 
-			printf("Optimizitation Done\n");
+			std::cerr << "Optimizitation Done" << std::endl;
 
-			printf("elapsed time is %ld ms\n", Profiler::Elapsed(start));
+			std::cerr << "elapsed time is " << Profiler::Elapsed(start) << " ms" << std::endl;
 
-			printf("Final Training error is %e\n", dnn.Cost);
-			printf("L2 error is %e\n", dnn.L2);
-			printf("Number of iterations: %d\n", dnn.Iterations);
+			std::cerr << "Final Training error is " << std::scientific << dnn.Cost << std::endl;
+			std::cerr << "L2 error is " << std::scientific << dnn.L2 << std::endl;
+			std::cerr << "Number of iterations: " << dnn.Iterations << std::endl;
 
-			printf("\nNetwork Weights:\n");
+			std::cerr << std::endl << "Network Weights:" << std::endl;
 			for (auto layer = 0; layer < (int)dnn.Weights.size(); layer++)
 			{
 				if (layer < (int)dnn.Weights.size() - 1)
 				{
-					printf("Layer %d:\n", layer);
+					std::cerr << "Layer " << layer << std::endl;
 				}
 				else
 				{
-					printf("Output layer %d\n", layer);
+					std::cerr << "Output layer " << layer << std::endl;
 				}
 				
 				ManagedMatrix::Print2D(dnn.Weights[layer]);
 			}
 
-			printf("\nClassifying...\n");
+			std::cerr << std::endl << "Classifying..." << std::endl;
 
 			start = Profiler::now();
 
 			auto classification = dnn.Classify(normalized_test, 0.9);
 
-			printf("Classification Done\n");
+			std::cerr << "Classification Done" << std::endl;
 
-			printf("elapsed time is %ld ms\n", Profiler::Elapsed(start));
+			std::cerr << "elapsed time is " << Profiler::Elapsed(start) << " ms" << std::endl;
 
 			if (save && std::strlen(SaveJSON.c_str()) > 0)
 			{
-				printf("\nSaving Deep Neural Network Parameters\n");
+				std::cerr << std::endl << "Saving Deep Neural Network Parameters" << std::endl;
 
 				ManagedFile::SaveJSON(SaveDirectory.empty() ? BaseDirectory : SaveDirectory, SaveJSON, ManagedUtil::Serialize(dnn));
 			}
@@ -375,7 +375,7 @@ void DNNTrainer(std::string InputData, int delimiter, double alpha, int epochs, 
 		
 		Load2D(InputData, input, output, delimiter == 0 ? "\t" : ",", Inputs, Categories, Examples);
 		
-		fprintf(stderr, "\n%d lines read with %d inputs and %d categories\n", Examples, Inputs, Categories);
+		std::cerr << std::endl << Examples <<" lines read with " << Inputs <<" inputs and " << Categories << " categories" << std::endl;
 		
 		if (Inputs > 0 && Categories > 0 && Examples > 0 && layers.size() > 0)
 		{
@@ -385,7 +385,7 @@ void DNNTrainer(std::string InputData, int delimiter, double alpha, int epochs, 
 			
 			auto start = Profiler::now();
 
-			printf("\nTraining Network...\n");
+			std::cerr << std::endl << "Training Network..." << std::endl;
 
 			dnn.SetupHiddenLayers(opts.Inputs, opts.Categories, layers);
 
@@ -394,42 +394,42 @@ void DNNTrainer(std::string InputData, int delimiter, double alpha, int epochs, 
 
 			dnn.Train(normalized_input, output, opts);
 
-			printf("Training Done\n");
+			std::cerr << "Training Done" << std::endl;
 
-			printf("elapsed time is %ld ms\n", Profiler::Elapsed(start));
+			std::cerr << "elapsed time is " << Profiler::Elapsed(start) << " ms" << std::endl;
 
-			printf("Final Training error is %e\n", dnn.Cost);
-			printf("L2 error is %e\n", dnn.L2);
-			printf("Number of iterations: %d\n", dnn.Iterations);
+			std::cerr << "Final Training error is " << std::scientific << dnn.Cost << std::endl;
+			std::cerr << "L2 error is " << std::scientific << dnn.L2 << std::endl;
+			std::cerr << "Number of iterations: " << dnn.Iterations << std::endl;
 
-			printf("\nNetwork Weights:\n");
+			std::cerr << std::endl << "Network Weights:" << std::endl;
 			for (auto layer = 0; layer < (int)dnn.Weights.size(); layer++)
 			{
 				if (layer < (int)dnn.Weights.size() - 1)
 				{
-					printf("Layer %d:\n", layer);
+					std::cerr << "Layer " << layer << std::endl;
 				}
 				else
 				{
-					printf("Output layer %d\n", layer);
+					std::cerr << "Output layer " << layer << std::endl;
 				}
 				
 				ManagedMatrix::Print2D(dnn.Weights[layer]);
 			}
 
-			printf("\nClassifying...\n");
+			std::cerr << std::endl << "Classifying..." << std::endl;
 
 			start = Profiler::now();
 
 			auto classification = dnn.Classify(normalized_test, 0.9);
 
-			printf("Classification Done\n");
+			std::cerr << "Classification Done" << std::endl;
 
-			printf("elapsed time is %ld ms\n", Profiler::Elapsed(start));
-
+			std::cerr << "elapsed time is " << Profiler::Elapsed(start) << " ms" << std::endl;
+			
 			if (save && std::strlen(SaveJSON.c_str()) > 0)
 			{
-				printf("\nSaving Deep Neural Network Parameters\n");
+				std::cerr << std::endl << "Saving Deep Neural Network Parameters" << std::endl;
 
 				ManagedFile::SaveJSON(SaveDirectory.empty() ? BaseDirectory : SaveDirectory, SaveJSON, ManagedUtil::Serialize(dnn));
 			}
@@ -459,8 +459,8 @@ void DNNPredict(std::string InputData, std::string ModelFile, int delimiter, int
 		
 		Load2D(InputData, input, delimiter == 0 ? "\t" : ",", Features, Samples);
 		
-		fprintf(stderr, "\n%d lines read with %d features\n", Samples, Features);
-		
+		std::cerr << std::endl << Samples <<" lines read with " << Features << " features" << std::endl;
+
 		if (Features > 0 && Samples > 0)
 		{
 			auto dnn = ManagedUtil::DeserializeDNN(ModelFile);
@@ -471,17 +471,17 @@ void DNNPredict(std::string InputData, std::string ModelFile, int delimiter, int
 
 				auto normalized = dnn.ApplyNormalization(input);
 
-				fprintf(stderr, "\nClassifying input data...\n");
+				std::cerr << std::endl << "Classifying input data..." << std::endl;
 				
 				auto start = Profiler::now();
 				
 				auto classification = dnn.Classify(normalized, 0.9);
 
-				fprintf(stderr, "\nClassification:\n");
+				std::cerr << std::endl << "Classification:" << std::endl;
 				ManagedMatrix::PrintList(classification, true);
 				
-				fprintf(stderr, "\nClassification Done\n");
-				fprintf(stderr, "elapsed time is %ld ms\n", Profiler::Elapsed(start));
+				std::cerr << std::endl << "Classification Done" << std::endl;
+				std::cerr << "elapsed time is " << Profiler::Elapsed(start) << " ms" << std::endl;
 
 				if (save && std::strlen(ClassificationFile.c_str()) > 0)
 				{
@@ -514,8 +514,8 @@ void NNTrainer(std::string InputData, int delimiter, double alpha, int Nodes, in
 		
 		Load2D(InputData, input, output, delimiter == 0 ? "\t" : ",", Inputs, Categories, Examples);
 		
-		fprintf(stderr, "\n%d lines read with %d inputs and %d categories\n", Examples, Inputs, Categories);
-		
+		std::cerr << std::endl << Examples <<" lines read with " << Inputs <<" inputs and " << Categories << " categories" << std::endl;
+
 		if (Inputs > 0 && Categories > 0 && Examples > 0 && Nodes > Inputs)
 		{	
 			auto opts = NeuralNetworkOptions(alpha, epochs, Categories, Inputs, Nodes, Examples, tolerance, useL2);
@@ -524,40 +524,40 @@ void NNTrainer(std::string InputData, int delimiter, double alpha, int Nodes, in
 			
 			auto start = Profiler::now();
 
-			printf("\nTraining Network...\n");
+			std::cerr << std::endl << "Training Network..." << std::endl;
 
 			auto normalized_input = nn.Normalize(input);
 			auto normalized_test = nn.ApplyNormalization(input);
 
 			nn.Train(normalized_input, output, opts);
 
-			printf("Training Done\n");
+			std::cerr << "Training Done" << std::endl;
 
-			printf("elapsed time is %ld ms\n", Profiler::Elapsed(start));
+			std::cerr << "elapsed time is " << Profiler::Elapsed(start) << " ms" << std::endl;
 
-			printf("Final Training error is %e\n", nn.Cost);
-			printf("L2 error is %e\n", nn.L2);
-			printf("Number of iterations: %d\n", nn.Iterations);
+			std::cerr << "Final Training error is " << std::scientific << nn.Cost << std::endl;
+			std::cerr << "L2 error is " << std::scientific << nn.L2 << std::endl;
+			std::cerr << "Number of iterations: " << nn.Iterations << std::endl;
 
-			printf("\nNetwork Weights:\n");
-			printf("Weights Wji:\n");
+			std::cerr << std::endl << "Network Weights:" << std::endl;
+			std::cerr << "Weights Wji:" << std::endl;
 			ManagedMatrix::Print2D(nn.Wji);
-			printf("Weights Wkj:\n");
+			std::cerr << "Weights Wkj:" << std::endl;
 			ManagedMatrix::Print2D(nn.Wkj);
 
-			printf("\nClassifying...\n");
+			std::cerr << std::endl << "Classifying..." << std::endl;
 
 			start = Profiler::now();
 
 			auto classification = nn.Classify(normalized_test, 0.9);
 
-			printf("Classification Done\n");
-
-			printf("elapsed time is %ld ms\n", Profiler::Elapsed(start));
+			std::cerr << "Classification Done" << std::endl;
+			
+			std::cerr << "elapsed time is " << Profiler::Elapsed(start) << " ms" << std::endl;
 
 			if (save && std::strlen(SaveJSON.c_str()) > 0)
 			{
-				printf("\nSaving Deep Neural Network Parameters\n");
+				std::cerr << std::endl << "Saving Neural Network Parameters" << std::endl;
 
 				ManagedFile::SaveJSON(SaveDirectory.empty() ? BaseDirectory : SaveDirectory, SaveJSON, ManagedUtil::Serialize(nn));
 			}
@@ -589,7 +589,7 @@ void NNOptimizer(std::string InputData, int delimiter, double alpha, int Nodes, 
 		
 		Load2D(InputData, input, output, delimiter == 0 ? "\t" : ",", Inputs, Categories, Examples);
 		
-		fprintf(stderr, "\n%d lines read with %d inputs and %d categories\n", Examples, Inputs, Categories);
+		std::cerr << std::endl << Examples <<" lines read with " << Inputs <<" inputs and " << Categories << " categories" << std::endl;
 		
 		if (Inputs > 0 && Categories > 0 && Examples > 0 && Nodes > Inputs)
 		{	
@@ -599,40 +599,40 @@ void NNOptimizer(std::string InputData, int delimiter, double alpha, int Nodes, 
 			
 			auto start = Profiler::now();
 
-			printf("\nOptimizing Network...\n");
+			std::cerr << std::endl << "Optimizing Network..." << std::endl;
 
 			auto normalized_input = nn.Normalize(input);
 			auto normalized_test = nn.ApplyNormalization(input);
 
 			nn.Run(normalized_input, output, opts);
 
-			printf("Optimization Done\n");
+			std::cerr << "Optimization Done" << std::endl;
 
-			printf("elapsed time is %ld ms\n", Profiler::Elapsed(start));
+			std::cerr << "elapsed time is " << Profiler::Elapsed(start) << " ms" << std::endl;
 
-			printf("Final Training error is %e\n", nn.Cost);
-			printf("L2 error is %e\n", nn.L2);
-			printf("Number of iterations: %d\n", nn.Iterations);
-
-			printf("\nNetwork Weights:\n");
-			printf("Weights Wji:\n");
+			std::cerr << "Final Training error is " << std::scientific << nn.Cost << std::endl;
+			std::cerr << "L2 error is " << std::scientific << nn.L2 << std::endl;
+			std::cerr << "Number of iterations: " << nn.Iterations << std::endl;
+			
+			std::cerr << std::endl << "Network Weights:" << std::endl;
+			std::cerr << "Weights Wji:" << std::endl;
 			ManagedMatrix::Print2D(nn.Wji);
-			printf("Weights Wkj:\n");
+			std::cerr << "Weights Wkj:" << std::endl;
 			ManagedMatrix::Print2D(nn.Wkj);
 
-			printf("\nClassifying...\n");
+			std::cerr << std::endl << "Classifying..." << std::endl;
 
 			start = Profiler::now();
 
 			auto classification = nn.Classify(normalized_test, 0.9);
 
-			printf("Classification Done\n");
-
-			printf("elapsed time is %ld ms\n", Profiler::Elapsed(start));
+			std::cerr << "Classification Done" << std::endl;
+			
+			std::cerr << "elapsed time is " << Profiler::Elapsed(start) << " ms" << std::endl;
 
 			if (save && std::strlen(SaveJSON.c_str()) > 0)
 			{
-				printf("\nSaving Deep Neural Network Parameters\n");
+				std::cerr << std::endl << "Saving Neural Network Parameters" << std::endl;
 
 				ManagedFile::SaveJSON(SaveDirectory.empty() ? BaseDirectory : SaveDirectory, SaveJSON, ManagedUtil::Serialize(nn));
 			}
@@ -825,7 +825,6 @@ int main(int argc, char** argv)
 
 	if (strlen(SaveDirectory) > 0 && save)
 	{
-
 		#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 
 			SaveDir = "./" + std::string(SaveDirectory) + "/";
@@ -836,27 +835,27 @@ int main(int argc, char** argv)
 
 		#endif
 
-		fprintf(stderr, "Save Directory: %s\n", SaveDirectory);
+		std::cerr << "... Save Directory: " << SaveDirectory << std::endl;
 	}
 	
 	if (strlen(InputData) > 0)
 	{
-		fprintf(stderr, "Input training data: %s\n", InputData);
+		std::cerr << "... Input training data: " << InputData << std::endl;
 	}
 
 	if (strlen(ModelFile) > 0)
 	{
-		fprintf(stderr, "... Model File: %s\n", ModelFile);
+		std::cerr << "... Model File: " << ModelFile << std::endl;
 	}
 
 	if (strlen(SaveJSON) > 0)
 	{
-		fprintf(stderr, "... JSON File: %s.json\n", SaveJSON);
+		std::cerr << "... JSON File: " << SaveJSON << ".json" << std::endl;
 	}
 
 	if (strlen(ClassificationFile) > 0)
 	{
-		fprintf(stderr, "... Classification File: %s.txt\n", ClassificationFile);
+		std::cerr << "... Classification File: " << ClassificationFile << ".txt" << std::endl;
 	}
 	
 	Layers = Layers.size() > 0 ? Layers : std::vector<int>({ nodes, nodes });
