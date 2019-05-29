@@ -1,9 +1,6 @@
 #include <algorithm>
 #include <cmath>
-#include <cstdio>
 #include <cstdlib>
-#include <cstring>
-#include <ctime>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -27,7 +24,7 @@
 
 void ParseInt(std::string arg, const char* str, const char* var, int& dst)
 {
-	auto len = strlen(str);
+	auto len = std::string(str).length();
 
 	if (len > 0)
 	{
@@ -52,7 +49,7 @@ void ParseInt(std::string arg, const char* str, const char* var, int& dst)
 
 void ParseInts(std::string arg, const char* str, const char* var, std::vector<int> & ints)
 {
-	auto len = strlen(str);
+	auto len = std::string(str).length();
 
 	if (len > 0)
 	{
@@ -93,7 +90,7 @@ void ParseInts(std::string arg, const char* str, const char* var, std::vector<in
 
 void ParseDouble(std::string arg, const char* str, const char* var, double& dst)
 {
-	auto len = strlen(str);
+	auto len = std::string(str).length();
 
 	if (len > 0)
 	{
@@ -130,7 +127,7 @@ void Load2D(std::string filename, ManagedArray& input, ManagedArray& output, con
 	
 	while (std::getline(file, line))
 	{
-		if (std::strlen(line.c_str()) > 0)
+		if (line.length() > 0)
 		{
 			temp.push_back(std::vector<double>());
 			
@@ -193,7 +190,7 @@ void Load2D(std::string filename, ManagedArray& input, const char* delimiter, in
 	
 	while (std::getline(file, line))
 	{
-		if (std::strlen(line.c_str()) > 0)
+		if (line.length() > 0)
 		{
 			temp.push_back(std::vector<double>());
 			
@@ -241,7 +238,7 @@ void DNNOptimizer(std::string InputData, int delimiter, double alpha, int epochs
 {
 	std::string BaseDirectory = "./";
 	
-	if (std::strlen(InputData.c_str()) > 0)
+	if (InputData.length() > 0)
 	{
 		auto Inputs = 0;
 		auto Categories = 0;
@@ -293,7 +290,7 @@ void DNNOptimizer(std::string InputData, int delimiter, double alpha, int epochs
 				ManagedMatrix::Print2D(dnn.Weights[layer]);
 			}
 
-			if (save && std::strlen(SaveJSON.c_str()) > 0)
+			if (save && SaveJSON.length() > 0)
 			{
 				std::cerr << std::endl << "Saving Deep Neural Network Parameters" << std::endl;
 
@@ -314,7 +311,7 @@ void DNNTrainer(std::string InputData, int delimiter, double alpha, int epochs, 
 {
 	std::string BaseDirectory = "./";
 	
-	if (std::strlen(InputData.c_str()) > 0)
+	if (InputData.length() > 0)
 	{
 		auto Inputs = 0;
 		auto Categories = 0;
@@ -366,7 +363,7 @@ void DNNTrainer(std::string InputData, int delimiter, double alpha, int epochs, 
 				ManagedMatrix::Print2D(dnn.Weights[layer]);
 			}
 
-			if (save && std::strlen(SaveJSON.c_str()) > 0)
+			if (save && SaveJSON.length() > 0)
 			{
 				std::cerr << std::endl << "Saving Deep Neural Network Parameters" << std::endl;
 
@@ -388,7 +385,7 @@ void DNNPredict(std::string InputData, std::string ModelFile, int delimiter, int
 {
 	std::string BaseDirectory = "./";
 	
-	if (std::strlen(InputData.c_str()) > 0)
+	if (InputData.length() > 0)
 	{
 		auto Samples = 0;
 		
@@ -420,7 +417,7 @@ void DNNPredict(std::string InputData, std::string ModelFile, int delimiter, int
 				std::cerr << std::endl << "Classification Done" << std::endl;
 				std::cerr << "elapsed time is " << Profiler::Elapsed(start) << " ms" << std::endl;
 
-				if (save && std::strlen(ClassificationFile.c_str()) > 0)
+				if (save && ClassificationFile.length() > 0)
 				{
 					ManagedFile::SaveClassification(SaveDirectory.empty() ? BaseDirectory : SaveDirectory, ClassificationFile, classification);
 				}
@@ -440,7 +437,7 @@ void NNTrainer(std::string InputData, int delimiter, double alpha, int Nodes, in
 {
 	std::string BaseDirectory = "./";
 	
-	if (std::strlen(InputData.c_str()) > 0)
+	if (InputData.length() > 0)
 	{
 		auto Inputs = 0;
 		auto Categories = 0;
@@ -481,7 +478,7 @@ void NNTrainer(std::string InputData, int delimiter, double alpha, int Nodes, in
 			std::cerr << "Weights Wkj:" << std::endl;
 			ManagedMatrix::Print2D(nn.Wkj);
 
-			if (save && std::strlen(SaveJSON.c_str()) > 0)
+			if (save && SaveJSON.length() > 0)
 			{
 				std::cerr << std::endl << "Saving Neural Network Parameters" << std::endl;
 
@@ -502,7 +499,7 @@ void NNOptimizer(std::string InputData, int delimiter, double alpha, int Nodes, 
 {
 	std::string BaseDirectory = "./";
 	
-	if (std::strlen(InputData.c_str()) > 0)
+	if (InputData.length() > 0)
 	{
 		auto Inputs = 0;
 		auto Categories = 0;
@@ -543,7 +540,7 @@ void NNOptimizer(std::string InputData, int delimiter, double alpha, int Nodes, 
 			std::cerr << "Weights Wkj:" << std::endl;
 			ManagedMatrix::Print2D(nn.Wkj);
 
-			if (save && std::strlen(SaveJSON.c_str()) > 0)
+			if (save && SaveJSON.length() > 0)
 			{
 				std::cerr << std::endl << "Saving Neural Network Parameters" << std::endl;
 
@@ -694,7 +691,7 @@ int main(int argc, char** argv)
 		ParseDouble(arg, "/ALPHA=", "Learning rate Alpha", alpha);
 	}
 
-	if (strlen(SaveDirectory) > 0 && save)
+	if (std::string(SaveDirectory).length() > 0 && save)
 	{
 		#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 
@@ -706,25 +703,25 @@ int main(int argc, char** argv)
 
 		#endif
 
-		std::cerr << "... Save Directory: " << SaveDirectory << std::endl;
+		std::cerr << "... Save Directory: " << SaveDir << std::endl;
 	}
 	
-	if (strlen(InputData) > 0)
+	if (std::string(InputData).length() > 0)
 	{
 		std::cerr << "... Input training data: " << InputData << std::endl;
 	}
 
-	if (strlen(ModelFile) > 0)
+	if (std::string(ModelFile).length() > 0)
 	{
 		std::cerr << "... Model File: " << ModelFile << std::endl;
 	}
 
-	if (strlen(SaveJSON) > 0)
+	if (std::string(SaveJSON).length() > 0)
 	{
 		std::cerr << "... JSON File: " << SaveJSON << ".json" << std::endl;
 	}
 
-	if (strlen(ClassificationFile) > 0)
+	if (std::string(ClassificationFile).length() > 0)
 	{
 		std::cerr << "... Classification File: " << ClassificationFile << ".txt" << std::endl;
 	}
@@ -735,11 +732,11 @@ int main(int argc, char** argv)
 	{
 		if (predict)
 		{
-			DNNPredict(InputData, ModelFile, delimiter, features, save, SaveDirectory, ClassificationFile);
+			DNNPredict(InputData, ModelFile, delimiter, features, save, SaveDir, ClassificationFile);
 		}
 		else
 		{
-			DNNOptimizer(InputData, delimiter, alpha, epochs, tolerance, Layers, save, SaveDirectory, SaveJSON);
+			DNNOptimizer(InputData, delimiter, alpha, epochs, tolerance, Layers, save, SaveDir, SaveJSON);
 		}
 	}
 
@@ -747,11 +744,11 @@ int main(int argc, char** argv)
 	{
 		if (predict)
 		{
-			DNNPredict(InputData, ModelFile, delimiter, features, save, SaveDirectory, ClassificationFile);
+			DNNPredict(InputData, ModelFile, delimiter, features, save, SaveDir, ClassificationFile);
 		}
 		else
 		{
-			DNNTrainer(InputData, delimiter, alpha, epochs, tolerance, Layers, useL2, save, SaveDirectory, SaveJSON);
+			DNNTrainer(InputData, delimiter, alpha, epochs, tolerance, Layers, useL2, save, SaveDir, SaveJSON);
 		}
 	}
 	
@@ -763,7 +760,7 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-			NNTrainer(InputData, delimiter, alpha, nodes, epochs, tolerance, useL2, save, SaveDirectory, SaveJSON);
+			NNTrainer(InputData, delimiter, alpha, nodes, epochs, tolerance, useL2, save, SaveDir, SaveJSON);
 		}
 	}
 		
@@ -775,7 +772,7 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-			NNOptimizer(InputData, delimiter, alpha, nodes, epochs, tolerance, save, SaveDirectory, SaveJSON);
+			NNOptimizer(InputData, delimiter, alpha, nodes, epochs, tolerance, save, SaveDir, SaveJSON);
 		}
 	}
 
