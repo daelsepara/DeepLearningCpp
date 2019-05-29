@@ -6,6 +6,7 @@
 #include <cstring>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 
 #include "ManagedMatrix.hpp"
@@ -27,31 +28,15 @@ public:
 		std::getline(file, line);
 
 		auto current_line = strdup(line.c_str());
-		char* next_token = NULL;
-
-		#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 		
-			auto token = strtok_s(current_line, ",", &next_token);
-		
-		#else
-
-			auto token = strtok(current_line, ",");
+		std::istringstream is(current_line);
+		std::string token;
 			
-		#endif
-
 		for (auto x = 0; x < A.Length(); x++)
 		{
-			A(x) = atof(token);
+			std::getline(is, token, ',');
 
-			#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-
-				token = strtok_s(NULL, ",", &next_token);
-
-			#else
-			
-				token = strtok(NULL, ",");
-			
-			#endif
+			A(x) = std::stod(token);
 		}
 
 		free(current_line);
@@ -87,7 +72,7 @@ public:
 		{
 			std::getline(file, line);
 
-			A(y) = atof(line.c_str());
+			A(y) = std::stod(line.c_str());
 		}
 
 		file.close();
@@ -118,31 +103,15 @@ public:
 			std::getline(file, line);
 
 			auto current_line = strdup(line.c_str());
-			char* next_token = NULL;
 
-			#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-						
-				auto token = strtok_s(current_line, ",", &next_token);
-
-			#else
-						
-				auto token = strtok(current_line, ",");
-
-			#endif
-
+			std::istringstream is(current_line);
+			std::string token;
+			
 			for (auto x = 0; x < A.x; x++)
 			{
-				temp(x, y) = atof(token);
+				std::getline(is, token, ',');
 
-				#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-
-					token = strtok_s(NULL, ",", &next_token);
-
-				#else
-
-					token = strtok(NULL, ",");
-
-				#endif
+				temp(x, y) = std::stod(token);
 			}
 
 			free(current_line);
@@ -190,31 +159,15 @@ public:
 			std::getline(file, line);
 
 			auto current_line = strdup(line.c_str());
-			char* next_token = NULL;
-
-			#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 			
-				auto token = strtok_s(current_line, ",", &next_token);
-			
-			#else
-			
-				auto token = strtok(current_line, ",");
-			
-			#endif
+			std::istringstream is(current_line);
+			std::string token;
 
 			for (auto x = 0; x < A.x; x++)
 			{
-				temp(x, y) = atof(token);
+				std::getline(is, token, ',');
 
-				#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-				
-					token = strtok_s(NULL, ",", &next_token);
-
-				#else
-				
-					token = strtok(NULL, ",");
-					
-				#endif
+				temp(x, y) = std::stod(token);
 			}
 
 			free(current_line);
@@ -265,35 +218,17 @@ public:
 			std::getline(file, line);
 
 			auto current_line = strdup(line.c_str());
-			char* next_token = NULL;
-
-			#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-						
-				auto token = strtok_s(current_line, ",", &next_token);
-
-			#else
-						
-				auto token = strtok(current_line, ",");
-
-			#endif
+			
+			std::istringstream is(current_line);
+			std::string token;
 
 			for (auto z = 0; z < A.z; z++)
 			{
 				for (auto x = 0; x < A.x; x++)
 				{
-					if (token != NULL)
+					if (std::getline(is, token, ','))
 					{
-						A(x, y, z) = atof(token);
-
-						#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-						
-							token = strtok_s(NULL, ",", &next_token);
-						
-						#else
-						
-							token = strtok(NULL, ",");
-						
-						#endif
+						A(x, y, z) = std::stod(token);
 					}
 				}
 			}
@@ -347,17 +282,9 @@ public:
 			std::getline(file, line);
 
 			auto current_line = strdup(line.c_str());
-			char* next_token = NULL;
-
-			#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 			
-				auto token = strtok_s(current_line, ",", &next_token);
-			
-			#else
-			
-				auto token = strtok(current_line, ",");
-			
-			#endif
+			std::istringstream is(current_line);
+			std::string token;
 
 			auto xoffset = y * xx;
 
@@ -367,19 +294,9 @@ public:
 
 				for (auto x = 0; x < xx; x++)
 				{
-					if (token != NULL)
+					if (std::getline(is, token, ','))
 					{
-						A(xoffset + x, yoffset) = atof(token);
-
-						#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-						
-							token = strtok_s(NULL, ",", &next_token);
-						
-						#else
-						
-							token = strtok(NULL, ",");
-						
-						#endif
+						A(xoffset + x, yoffset) = std::stod(token);
 					}
 				}
 			}
@@ -392,19 +309,11 @@ public:
 
 	static void SaveJSON(std::string BaseDirectory, std::string BaseFileName, std::string json_string)
 	{
-		char buffer[200];
+		std::ostringstream buffer;
 
-		#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-		
-			sprintf_s(buffer, "%s/%s.json", BaseDirectory.c_str(), BaseFileName.c_str());
+		buffer << BaseDirectory << "/" << BaseFileName << ".json";
 
-		#else
-		
-			sprintf(buffer, "%s/%s.json", BaseDirectory.c_str(), BaseFileName.c_str());
-		
-		#endif
-
-		std::string filename = buffer;
+		std::string filename = buffer.str();
 		std::ofstream file(filename);
 
 		file << json_string;
@@ -416,19 +325,11 @@ public:
 	{
 		auto data = ManagedArray(sizex, sizey, sizez);
 
-		char buffer[200];
+		std::ostringstream buffer;
 
-		#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-		
-			sprintf_s(buffer, "%s/%s.txt", BaseDirectory.c_str(), BaseFileName.c_str());
+		buffer << BaseDirectory << "/" << BaseFileName << ".txt";
 
-		#else
-		
-			sprintf(buffer, "%s/%s.txt", BaseDirectory.c_str(), BaseFileName.c_str());
-
-		#endif
-
-		std::string filename = buffer;
+		std::string filename = buffer.str();
 
 		Load3D(filename, data);
 
@@ -437,19 +338,11 @@ public:
 
 	static void SaveData(std::string BaseDirectory, std::string BaseFileName, ManagedArray& data)
 	{
-		char buffer[200];
+		std::ostringstream buffer;
 
-		#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-				
-			sprintf_s(buffer, "%s/%s.txt", BaseDirectory.c_str(), BaseFileName.c_str());
+		buffer << BaseDirectory << "/" << BaseFileName << ".txt";
 
-		#else
-				
-			sprintf(buffer, "%s/%s.txt", BaseDirectory.c_str(), BaseFileName.c_str());
-
-		#endif
-
-		std::string filename = buffer;
+		std::string filename = buffer.str();
 
 		Save3D(filename, data);
 	}
@@ -458,19 +351,11 @@ public:
 	{
 		auto classification = ManagedArray(sizex, sizey);
 
-		char buffer[200];
+		std::ostringstream buffer;
 
-		#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-				
-			sprintf_s(buffer, "%s/%s.txt", BaseDirectory.c_str(), BaseFileName.c_str());
-		
-		#else
-				
-			sprintf(buffer, "%s/%s.txt", BaseDirectory.c_str(), BaseFileName.c_str());
-		
-		#endif
+		buffer << BaseDirectory << "/" << BaseFileName << ".txt";
 
-		std::string filename = buffer;
+		std::string filename = buffer.str();
 
 		Load2D(filename, classification);
 
@@ -479,19 +364,12 @@ public:
 
 	static void SaveClassification(std::string BaseDirectory, std::string BaseFileName, ManagedIntList classification)
 	{
-		char buffer[200];
+		std::ostringstream buffer;
 
-		#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-		
-			sprintf_s(buffer, "%s/%s.txt", BaseDirectory.c_str(), BaseFileName.c_str());
+		buffer << BaseDirectory << "/" << BaseFileName << ".txt";
 
-		#else
-		
-			sprintf(buffer, "%s/%s.txt", BaseDirectory.c_str(), BaseFileName.c_str());
-		
-		#endif
+		std::string filename = buffer.str();
 
-		std::string filename = buffer;
 		std::ofstream file(filename);
 
 		for (auto y = 0; y < classification.Length(); y++)

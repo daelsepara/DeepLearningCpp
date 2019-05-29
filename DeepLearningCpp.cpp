@@ -6,6 +6,7 @@
 #include <ctime>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 
@@ -34,7 +35,7 @@ void ParseInt(std::string arg, const char* str, const char* var, int& dst)
 		{
 			try
 			{
-				auto val = stoi(arg.substr(len));
+				auto val = std::stoi(arg.substr(len));
 
 				std::cerr << "... " << var << " = " << val << std::endl;
 
@@ -67,7 +68,7 @@ void ParseInts(std::string arg, const char* str, const char* var, std::vector<in
 
 				while ((pos = s.find(delimiter)) != std::string::npos) {
 
-					auto val = stoi(s.substr(0, pos));
+					auto val = std::stoi(s.substr(0, pos));
 
 					ints.push_back(val);
 
@@ -76,7 +77,7 @@ void ParseInts(std::string arg, const char* str, const char* var, std::vector<in
 
 				if (s.length() > 0)
 				{
-					auto val = stoi(s.substr(0, pos));
+					auto val = std::stoi(s.substr(0, pos));
 
 					ints.push_back(val);
 				}
@@ -100,7 +101,7 @@ void ParseDouble(std::string arg, const char* str, const char* var, double& dst)
 		{
 			try
 			{
-				auto val = stod(arg.substr(len));
+				auto val = std::stod(arg.substr(len));
 
 				std::cerr << "... " << var << " = " << std::scientific << val << std::endl;
 
@@ -135,37 +136,18 @@ void Load2D(std::string filename, ManagedArray& input, ManagedArray& output, con
 			
 			auto current_line = strdup(line.c_str());
 			
-			char* next_token = NULL;
-
-			#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-			
-				auto token = std::strtok_s(current_line, delimiter, &next_token);
-			
-			#else
-			
-				auto token = std::strtok(current_line, delimiter);
-			
-			#endif
+			std::istringstream is(current_line);
+			std::string token;
 			
 			int tokens = 0;
-			
-			while (token != NULL)
+
+			while (std::getline(is, token, delimiter[0]))
 			{
 				tokens++;
 				
-				auto value = strtod(token, NULL);
+				auto value = std::stod(token);
 				
 				temp[examples].push_back(value);
-				
-				#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-				
-					token = std::strtok_s(NULL, delimiter, &next_token);
-				
-				#else
-			
-					token = strtok(NULL, delimiter);
-			
-				#endif
 			}
 		
 			free(current_line);
@@ -217,37 +199,18 @@ void Load2D(std::string filename, ManagedArray& input, const char* delimiter, in
 			
 			auto current_line = strdup(line.c_str());
 			
-			char* next_token = NULL;
-
-			#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-			
-				auto token = std::strtok_s(current_line, delimiter, &next_token);
-			
-			#else
-			
-				auto token = std::strtok(current_line, delimiter);
-			
-			#endif
+			std::istringstream is(current_line);
+			std::string token;
 			
 			int tokens = 0;
-			
-			while (token != NULL)
+
+			while (std::getline(is, token, delimiter[0]))
 			{
 				tokens++;
 				
-				auto value = strtod(token, NULL);
-
+				auto value = std::stod(token);
+				
 				temp[samples].push_back(value);
-				
-				#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-				
-					token = std::strtok_s(NULL, delimiter, &next_token);
-				
-				#else
-			
-					token = strtok(NULL, delimiter);
-			
-				#endif
 			}
 		
 			free(current_line);

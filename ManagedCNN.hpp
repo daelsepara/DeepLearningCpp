@@ -656,7 +656,7 @@ public:
 				batchnum++;
 			}
 
-			fprintf(stderr, "epoch %d/%d elapsed time is %ld ms - Error: %f\n", epoch + 1, opts.Epochs, Profiler::Elapsed(start), rLVal);
+			std::cerr << "epoch " << epoch + 1 << "/" << opts.Epochs << " elapsed time is " << Profiler::Elapsed(start) << " ms - Error: " << rLVal << std::endl;
 
 			ManagedOps::Free(temp_input);
 			ManagedOps::Free(temp_output);
