@@ -19,8 +19,8 @@ public:
 	static void Load1D(std::string filename, ManagedArray& A)
 	{
 		std::ifstream file(filename); // open this file for input
-		std::string line;
 
+		std::string line;
 		std::getline(file, line);
 
 		std::istringstream is(line);
@@ -64,7 +64,7 @@ public:
 		{
 			std::getline(file, line);
 
-			A(y) = std::stod(line.c_str());
+			A(y) = std::stod(line);
 		}
 
 		file.close();
@@ -91,7 +91,6 @@ public:
 		for (auto y = 0; y < A.y; y++)
 		{
 			std::string line;
-
 			std::getline(file, line);
 
 			std::istringstream is(line);
@@ -143,7 +142,6 @@ public:
 		for (auto y = 0; y < A.y; y++)
 		{
 			std::string line;
-
 			std::getline(file, line);
 
 			std::istringstream is(line);
@@ -290,6 +288,7 @@ public:
 		buffer << BaseDirectory << "/" << BaseFileName << ".json";
 
 		std::string filename = buffer.str();
+		
 		std::ofstream file(filename);
 
 		file << json_string;
