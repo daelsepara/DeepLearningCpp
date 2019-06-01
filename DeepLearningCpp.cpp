@@ -18,10 +18,6 @@
 #include "Random.hpp"
 #include "ManagedUtil.hpp"
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-#define strdup _strdup
-#endif
-
 void ParseInt(std::string arg, const char* str, const char* var, int& dst)
 {
 	auto len = std::string(str).length();
@@ -131,9 +127,7 @@ void Load2D(std::string filename, ManagedArray& input, ManagedArray& output, con
 		{
 			temp.push_back(std::vector<double>());
 			
-			auto current_line = strdup(line.c_str());
-			
-			std::istringstream is(current_line);
+			std::istringstream is(line);
 			std::string token;
 			
 			int tokens = 0;
@@ -146,8 +140,6 @@ void Load2D(std::string filename, ManagedArray& input, ManagedArray& output, con
 				
 				temp[examples].push_back(value);
 			}
-		
-			free(current_line);
 		
 			if (tokens > 0)
 				examples++;
@@ -194,9 +186,7 @@ void Load2D(std::string filename, ManagedArray& input, const char* delimiter, in
 		{
 			temp.push_back(std::vector<double>());
 			
-			auto current_line = strdup(line.c_str());
-			
-			std::istringstream is(current_line);
+			std::istringstream is(line);
 			std::string token;
 			
 			int tokens = 0;
@@ -209,8 +199,6 @@ void Load2D(std::string filename, ManagedArray& input, const char* delimiter, in
 				
 				temp[samples].push_back(value);
 			}
-		
-			free(current_line);
 		
 			if (tokens > 0 && tokens >= features)
 				samples++;

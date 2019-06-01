@@ -12,10 +12,6 @@
 #include "ManagedMatrix.hpp"
 #include "ManagedOps.hpp"
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-#define strdup _strdup
-#endif
-
 class ManagedFile
 {
 public:
@@ -27,9 +23,7 @@ public:
 
 		std::getline(file, line);
 
-		auto current_line = strdup(line.c_str());
-		
-		std::istringstream is(current_line);
+		std::istringstream is(line);
 		std::string token;
 			
 		for (auto x = 0; x < A.Length(); x++)
@@ -38,8 +32,6 @@ public:
 
 			A(x) = std::stod(token);
 		}
-
-		free(current_line);
 
 		file.close();
 	}
@@ -102,9 +94,7 @@ public:
 
 			std::getline(file, line);
 
-			auto current_line = strdup(line.c_str());
-
-			std::istringstream is(current_line);
+			std::istringstream is(line);
 			std::string token;
 			
 			for (auto x = 0; x < A.x; x++)
@@ -113,8 +103,6 @@ public:
 
 				temp(x, y) = std::stod(token);
 			}
-
-			free(current_line);
 		}
 
 		ManagedOps::Copy2D(A, temp, 0, 0);
@@ -158,9 +146,7 @@ public:
 
 			std::getline(file, line);
 
-			auto current_line = strdup(line.c_str());
-			
-			std::istringstream is(current_line);
+			std::istringstream is(line);
 			std::string token;
 
 			for (auto x = 0; x < A.x; x++)
@@ -169,8 +155,6 @@ public:
 
 				temp(x, y) = std::stod(token);
 			}
-
-			free(current_line);
 		}
 
 		ManagedOps::Copy2D4DIJ(A, temp, i, j);
@@ -217,9 +201,7 @@ public:
 			std::string line;
 			std::getline(file, line);
 
-			auto current_line = strdup(line.c_str());
-			
-			std::istringstream is(current_line);
+			std::istringstream is(line);
 			std::string token;
 
 			for (auto z = 0; z < A.z; z++)
@@ -232,8 +214,6 @@ public:
 					}
 				}
 			}
-
-			free(current_line);
 		}
 
 		file.close();
@@ -281,9 +261,7 @@ public:
 			std::string line;
 			std::getline(file, line);
 
-			auto current_line = strdup(line.c_str());
-			
-			std::istringstream is(current_line);
+			std::istringstream is(line);
 			std::string token;
 
 			auto xoffset = y * xx;
@@ -300,8 +278,6 @@ public:
 					}
 				}
 			}
-
-			free(current_line);
 		}
 
 		file.close();
