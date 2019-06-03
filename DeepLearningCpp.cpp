@@ -541,6 +541,57 @@ void NNOptimizer(std::string InputData, int delimiter, double alpha, int Nodes, 
 	}
 }
 
+// can also use models trained with NN Optimizer
+void NNPredict(std::string InputData, std::string ModelFile, int delimiter, int Features, bool save, std::string SaveDirectory, std::string ClassificationFile)
+{
+	std::string BaseDirectory = "./";
+	
+	if (InputData.length() > 0)
+	{
+		auto Samples = 0;
+		
+		auto input = ManagedArray();
+		
+		Load2D(InputData, input, delimiter == 0 ? "\t" : ",", Features, Samples);
+		
+		std::cerr << std::endl << Samples <<" lines read with " << Features << " features" << std::endl;
+
+		if (Features > 0 && Samples > 0)
+		{
+			auto nn = ManagedUtil::DeserializeNN(ModelFile);
+
+			if (nn.Wji.Length() > 0 && nn.Wkj.Length() > 0)
+			{
+				auto normalized = nn.ApplyNormalization(input);
+
+				std::cerr << std::endl << "Classifying input data..." << std::endl;
+				
+				auto start = Profiler::now();
+				
+				auto classification = nn.Classify(normalized, 0.9);
+
+				std::cerr << std::endl << "Classification:" << std::endl;
+				ManagedMatrix::PrintList(classification, true);
+				
+				std::cerr << std::endl << "Classification Done" << std::endl;
+				std::cerr << "elapsed time is " << Profiler::Elapsed(start) << " ms" << std::endl;
+
+				if (save && ClassificationFile.length() > 0)
+				{
+					ManagedFile::SaveClassification(SaveDirectory.empty() ? BaseDirectory : SaveDirectory, ClassificationFile, classification);
+				}
+
+				ManagedOps::Free(classification);
+				ManagedOps::Free(normalized);
+			}
+
+			nn.Free();
+		}
+
+		ManagedOps::Free(input);
+	}
+}
+
 int main(int argc, char** argv)
 {
 	// convolutional neural network parameters
@@ -740,7 +791,7 @@ int main(int argc, char** argv)
 	{
 		if (predict)
 		{
-
+			NNPredict(InputData, ModelFile, delimiter, features, save, SaveDir, ClassificationFile);
 		}
 		else
 		{
@@ -752,7 +803,7 @@ int main(int argc, char** argv)
 	{
 		if (predict)
 		{
-
+			NNPredict(InputData, ModelFile, delimiter, features, save, SaveDir, ClassificationFile);
 		}
 		else
 		{
