@@ -10,7 +10,6 @@
 #include "ManagedCNN.hpp"
 #include "ManagedDNN.hpp"
 #include "ManagedNN.hpp"
-#include "OptimizerDNN.hpp"
 #include "OptimizerNN.hpp"
 
 #include "ManagedUtil.hpp"
@@ -243,7 +242,7 @@ void DNNOptimizer(std::string InputData, int delimiter, double alpha, int epochs
 		{
 			auto opts = NeuralNetworkOptions(alpha, epochs, Categories, Inputs, Examples, tolerance, (int)layers.size(), false);
 			
-			auto dnn = OptimizerDNN();
+			auto dnn = ManagedDNN();
 
 			auto start = Profiler::now();
 
@@ -253,7 +252,7 @@ void DNNOptimizer(std::string InputData, int delimiter, double alpha, int epochs
 
 			auto normalized_input = dnn.Normalize(input);
 
-			dnn.Run(normalized_input, output, opts);
+			dnn.Optimize(normalized_input, output, opts);
 
 			std::cerr << "Optimizitation Done" << std::endl;
 
