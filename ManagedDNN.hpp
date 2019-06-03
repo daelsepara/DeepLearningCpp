@@ -961,7 +961,8 @@ private:
 		}
 
 		// if line searched succeeded 
-		if (success) {
+		if (success)
+		{
 			f1 = f2;
 
 			// Polack-Ribiere direction

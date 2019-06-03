@@ -10,7 +10,6 @@
 #include "ManagedCNN.hpp"
 #include "ManagedDNN.hpp"
 #include "ManagedNN.hpp"
-#include "OptimizerNN.hpp"
 
 #include "ManagedUtil.hpp"
 #include "Profiler.hpp"
@@ -503,7 +502,7 @@ void NNOptimizer(std::string InputData, int delimiter, double alpha, int Nodes, 
 		{	
 			auto opts = NeuralNetworkOptions(alpha, epochs, Categories, Inputs, Nodes, Examples, tolerance);
 			
-			auto nn = OptimizerNN();
+			auto nn = ManagedNN();
 			
 			auto start = Profiler::now();
 
@@ -511,7 +510,7 @@ void NNOptimizer(std::string InputData, int delimiter, double alpha, int Nodes, 
 
 			auto normalized_input = nn.Normalize(input);
 
-			nn.Run(normalized_input, output, opts);
+			nn.Optimize(normalized_input, output, opts);
 
 			std::cerr << "Optimization Done" << std::endl;
 

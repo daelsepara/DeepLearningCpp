@@ -11,7 +11,6 @@
 #include "NeuralNetworkOptions.hpp"
 #include "ManagedDNN.hpp"
 #include "ManagedNN.hpp"
-#include "OptimizerNN.hpp"
 
 #include "ConvolutionalNeuralNetworkOptions.hpp"
 #include "ManagedCNN.hpp"
@@ -191,22 +190,6 @@ public:
 	}
 
 	static std::string Serialize(ManagedNN network)
-	{
-		json j;
-
-		j["Wkj"] = json(Convert2D(network.Wkj));
-		j["Wji"] = json(Convert2D(network.Wji));
-
-		if (network.Min.size() > 0 && network.Max.size() > 0)
-		{
-			j["Normalization"] += json(network.Min);
-			j["Normalization"] += json(network.Max);
-		}
-
-		return j.dump();
-	}
-
-	static std::string Serialize(OptimizerNN network)
 	{
 		json j;
 
