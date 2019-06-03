@@ -6,7 +6,6 @@
 
 #include "FuncOutput.hpp"
 #include "ManagedArray.hpp"
-#include "ManagedFile.hpp"
 #include "ManagedMatrix.hpp"
 #include "ManagedOps.hpp"
 #include "NeuralNetworkOptions.hpp"
@@ -468,7 +467,7 @@ private:
 		{
 			for (int y = 0; y < Wkj.y; y++)
 			{
-				if (index < XX.size())
+				if (index < (int)XX.size())
 					Wkj(x, y) = XX[index];
 
 				index++;
@@ -479,7 +478,7 @@ private:
 		{
 			for (int y = 0; y < Wji.y; y++)
 			{
-				if (index < XX.size())
+				if (index < (int)XX.size())
 					Wji(x, y) = XX[index];
 
 				index++;
@@ -507,7 +506,7 @@ private:
 		{
 			auto dot = 0.0;
 
-			for (auto i = 0; i < a.size(); i++)
+			for (int i = 0; i < (int)a.size(); i++)
 				dot += a[i] * b[i];
 
 			return dot;
@@ -520,7 +519,7 @@ private:
 	{
 		if (dst.size() == src.size())
 		{
-			for (auto i = 0; i < dst.size(); i++)
+			for (int i = 0; i < (int)dst.size(); i++)
 				dst[i] += scale * src[i];
 		}
 	}
@@ -529,7 +528,7 @@ private:
 	{
 		if (dst.size() == src.size())
 		{
-			for (auto i = 0; i < dst.size(); i++)
+			for (int i = 0; i < (int)dst.size(); i++)
 				dst[i] = scale * src[i];
 		}
 	}
@@ -576,7 +575,7 @@ private:
 	{
 		auto XX = ReshapeWeights(Wkj, Wji);
 
-		s.resize(XX.size());
+		s.resize((int)XX.size());
 
 		Evaluations = 0;
 		Iterations = 0;
@@ -606,8 +605,8 @@ private:
 		// initial step is red / (|s|+1)
 		z1 = Red / (1.0 - d1);
 
-		X0.resize(XX.size());
-		DF0.resize(XX.size());
+		X0.resize((int)XX.size());
+		DF0.resize((int)XX.size());
 	}
 
 	bool StepOptimizer(ManagedArray& input)

@@ -7,7 +7,6 @@
 #include "FuncOutput.hpp"
 #include "HiddenLayer.hpp"
 #include "ManagedArray.hpp"
-#include "ManagedFile.hpp"
 #include "ManagedMatrix.hpp"
 #include "ManagedOps.hpp"
 #include "NeuralNetworkOptions.hpp"
@@ -79,7 +78,7 @@ private:
 		}
 
 		// Cleanup
-		for (int layer = 0; layer < Activations.size(); layer++)
+		for (int layer = 0; layer < (int)Activations.size(); layer++)
 		{
 			ManagedOps::Free(Activations[layer]);
 		}
@@ -119,9 +118,9 @@ private:
 			current++;
 		}
 
-		for (int layer = 0; layer < Weights.size(); layer++)
+		for (int layer = 0; layer < (int)Weights.size(); layer++)
 		{
-			auto tD = ManagedMatrix::Transpose(D[Weights.size() - layer - 1]);
+			auto tD = ManagedMatrix::Transpose(D[(int)Weights.size() - layer - 1]);
 
 			ManagedOps::Free(Deltas[layer]);
 
@@ -146,7 +145,7 @@ private:
 		L2 /= input.y;
 
 		// Cleanup
-		for (int layer = 0; layer < Weights.size(); layer++)
+		for (int layer = 0; layer < (int)Weights.size(); layer++)
 		{
 			ManagedOps::Free(D[layer]);
 			ManagedOps::Free(X[layer]);
@@ -156,7 +155,7 @@ private:
 
 	void ClearDeltas()
 	{
-		for (int layer = 0; layer < Weights.size(); layer++)
+		for (int layer = 0; layer < (int)Weights.size(); layer++)
 		{
 			// cleanup of arrays allocated in BackPropagation
 			ManagedOps::Free(Deltas[layer]);
@@ -165,7 +164,7 @@ private:
 
 	void ApplyGradients(NeuralNetworkOptions opts)
 	{
-		for (int layer = 0; layer < Weights.size(); layer++)
+		for (int layer = 0; layer < (int)Weights.size(); layer++)
 		{
 			ManagedMatrix::Add(Weights[layer], Deltas[layer], -opts.Alpha);
 		}
@@ -240,7 +239,7 @@ public:
 		ManagedOps::Free(Y);
 
 		// Cleanup
-		for (int layer = 0; layer < Weights.size(); layer++)
+		for (int layer = 0; layer < (int)Weights.size(); layer++)
 		{
 			ManagedOps::Free(X[layer]);
 			ManagedOps::Free(Z[layer]);
@@ -284,7 +283,7 @@ public:
 		// cleanup of arrays allocated in Forward propagation
 		ManagedOps::Free(Y);
 
-		for (int layer = 0; layer < Weights.size(); layer++)
+		for (int layer = 0; layer < (int)Weights.size(); layer++)
 		{
 			ManagedOps::Free(X[layer]);
 			ManagedOps::Free(Z[layer]);
@@ -313,12 +312,12 @@ public:
 
 			Layers.push_back(HiddenLayer(inputs, LayerNodes[0]));
 
-			for (int layer = 1; layer < LayerNodes.size(); layer++)
+			for (int layer = 1; layer < (int)LayerNodes.size(); layer++)
 			{
 				Layers.push_back(HiddenLayer(LayerNodes[layer - 1], LayerNodes[layer]));
 			}
 
-			Layers.push_back(HiddenLayer(LayerNodes[LayerNodes.size() - 1], categories));
+			Layers.push_back(HiddenLayer(LayerNodes[(int)LayerNodes.size() - 1], categories));
 		}
 	}
 
@@ -328,7 +327,7 @@ public:
 		{
 			if (Activations.size() > 0)
 			{
-				for (int layer = 0; layer < Activations.size(); layer++)
+				for (int layer = 0; layer < (int)Activations.size(); layer++)
 				{
 					ManagedOps::Free(Activations[layer]);
 				}
@@ -336,7 +335,7 @@ public:
 
 			if (D.size() > 0)
 			{
-				for (int layer = 0; layer < D.size(); layer++)
+				for (int layer = 0; layer < (int)D.size(); layer++)
 				{
 					ManagedOps::Free(D[layer]);
 				}
@@ -344,7 +343,7 @@ public:
 
 			if (Deltas.size() > 0)
 			{
-				for (int layer = 0; layer < Deltas.size(); layer++)
+				for (int layer = 0; layer < (int)Deltas.size(); layer++)
 				{
 					ManagedOps::Free(Deltas[layer]);
 				}
@@ -352,7 +351,7 @@ public:
 
 			if (X.size() > 0)
 			{
-				for (int layer = 0; layer < X.size(); layer++)
+				for (int layer = 0; layer < (int)X.size(); layer++)
 				{
 					ManagedOps::Free(X[layer]);
 				}
@@ -360,7 +359,7 @@ public:
 
 			if (Z.size() > 0)
 			{
-				for (int layer = 0; layer < Z.size(); layer++)
+				for (int layer = 0; layer < (int)Z.size(); layer++)
 				{
 					ManagedOps::Free(Z[layer]);
 				}
@@ -368,7 +367,7 @@ public:
 
 			if (Weights.size() > 0)
 			{
-				for (int layer = 0; layer < Weights.size(); layer++)
+				for (int layer = 0; layer < (int)Weights.size(); layer++)
 				{
 					ManagedOps::Free(Weights[layer]);
 				}
@@ -376,9 +375,9 @@ public:
 
 			if (Layers.size() > 0)
 			{
-				Weights.resize(Layers.size());
+				Weights.resize((int)Layers.size());
 
-				for (int layer = 0; layer < Layers.size(); layer++)
+				for (int layer = 0; layer < (int)Layers.size(); layer++)
 				{
 					Weights[layer] = ManagedArray(Layers[layer].Inputs + 1, Layers[layer].Outputs);
 				}
@@ -597,7 +596,7 @@ private:
 		{
 			int index = 0;
 
-			for (int layer = 0; layer < A.size(); layer++)
+			for (int layer = 0; layer < (int)A.size(); layer++)
 			{
 				for (int x = 0; x < A[layer].x; x++)
 				{
@@ -619,13 +618,13 @@ private:
 	{
 		int index = 0;
 
-		for (int layer = 0; layer < Weights.size(); layer++)
+		for (int layer = 0; layer < (int)Weights.size(); layer++)
 		{
 			for (int x = 0; x < Weights[layer].x; x++)
 			{
 				for (int y = 0; y < Weights[layer].y; y++)
 				{
-					if (index < XX.size())
+					if (index < (int)XX.size())
 						Weights[layer](x, y) = XX[index];
 
 					index++;
@@ -654,7 +653,7 @@ private:
 		{
 			auto dot = 0.0;
 
-			for (auto i = 0; i < a.size(); i++)
+			for (int i = 0; i < (int)a.size(); i++)
 				dot += a[i] * b[i];
 
 			return dot;
@@ -667,7 +666,7 @@ private:
 	{
 		if (dst.size() == src.size())
 		{
-			for (auto i = 0; i < dst.size(); i++)
+			for (int i = 0; i < (int)dst.size(); i++)
 				dst[i] += scale * src[i];
 		}
 	}
@@ -676,7 +675,7 @@ private:
 	{
 		if (dst.size() == src.size())
 		{
-			for (auto i = 0; i < dst.size(); i++)
+			for (int i = 0; i < (int)dst.size(); i++)
 				dst[i] = scale * src[i];
 		}
 	}
@@ -723,7 +722,7 @@ private:
 	{
 		auto XX = ReshapeWeights(Weights);
 
-		s.resize(XX.size());
+		s.resize((int)XX.size());
 
 		Evaluations = 0;
 		Iterations = 0;
@@ -753,8 +752,8 @@ private:
 		// initial step is red / (|s|+1)
 		z1 = Red / (1.0 - d1);
 
-		X0.resize(XX.size());
-		DF0.resize(XX.size());
+		X0.resize((int)XX.size());
+		DF0.resize((int)XX.size());
 	}
 
 	bool StepOptimizer(ManagedArray& input)
@@ -1061,7 +1060,7 @@ public:
 
 		if (Weights.size() > 0)
 		{
-			for (int layer = 0; layer < Weights.size(); layer++)
+			for (int layer = 0; layer < (int)Weights.size(); layer++)
 			{
 				ManagedOps::Free(Weights[layer]);
 			}
