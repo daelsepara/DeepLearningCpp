@@ -387,8 +387,6 @@ void DNNPredict(std::string InputData, std::string ModelFile, int delimiter, int
 
 			if ((int)dnn.Weights.size() > 0)
 			{
-				auto prediction = ManagedArray(1, Samples);	
-
 				auto normalized = dnn.ApplyNormalization(input);
 
 				std::cerr << std::endl << "Classifying input data..." << std::endl;
