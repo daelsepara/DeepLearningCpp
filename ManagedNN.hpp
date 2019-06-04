@@ -320,7 +320,7 @@ public:
 
 		return prediction;
 	}
-	
+
 	void SetupNetwork(ManagedArray& output, NeuralNetworkOptions opts)
 	{
 		Wji = ManagedArray(opts.Inputs + 1, opts.Nodes);
@@ -337,8 +337,6 @@ public:
 		Cost = 1.0;
 		Iterations = 0;
 	}
-
-private:
 
 	bool StepNetwork(ManagedArray& input, NeuralNetworkOptions opts)
 	{
@@ -359,8 +357,6 @@ private:
 
 		return (optimized || Iterations >= opts.Epochs);
 	}
-
-public:
 
 	void Train(ManagedArray& input, ManagedArray& output, NeuralNetworkOptions opts)
 	{
@@ -884,6 +880,8 @@ private:
 		return !(iteration < std::abs(length));
 	}
 
+public:
+
 	bool Optimized(ManagedArray& input, NeuralNetworkOptions opts)
 	{
 		auto SearchComplete = StepOptimizer(input);
@@ -892,8 +890,6 @@ private:
 
 		return (SearchComplete || std::isnan(Cost) || Iterations >= opts.Epochs || (Cost) < opts.Tolerance);
 	}
-
-public:
 
 	void Optimize(ManagedArray& input, ManagedArray& output, NeuralNetworkOptions opts)
 	{

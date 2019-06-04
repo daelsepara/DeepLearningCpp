@@ -203,6 +203,11 @@ private:
 		return result;
 	}
 
+	void SetupLabels(ManagedArray& output, NeuralNetworkOptions opts)
+	{
+		Y_true = Labels(output, opts);
+	}
+
 public:
 
 	ManagedArray Predict(ManagedArray& test)
@@ -291,15 +296,6 @@ public:
 
 		return classification;
 	}
-
-private:
-
-	void SetupLabels(ManagedArray& output, NeuralNetworkOptions opts)
-	{
-		Y_true = Labels(output, opts);
-	}
-
-public:
 
 	void SetupHiddenLayers(int inputs, int categories, std::vector<int> LayerNodes)
 	{
@@ -1031,6 +1027,8 @@ private:
 		return !(iteration < std::abs(length));
 	}
 
+public:
+
 	bool Optimized(ManagedArray& input, NeuralNetworkOptions opts)
 	{
 		auto SearchComplete = StepOptimizer(input);
@@ -1039,8 +1037,6 @@ private:
 
 		return (SearchComplete || std::isnan(Cost) || Iterations >= opts.Epochs || (Cost) < opts.Tolerance);
 	}
-
-public:
 
 	void Optimize(ManagedArray& input, ManagedArray& output, NeuralNetworkOptions opts)
 	{
