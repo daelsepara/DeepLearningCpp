@@ -71,12 +71,6 @@
     <ClInclude Include="NeuralNetworkOptions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OptimizerDNN.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OptimizerNN.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Profiler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

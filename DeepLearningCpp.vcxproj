@@ -118,8 +118,6 @@
     <ClInclude Include="ManagedOps.hpp" />
     <ClInclude Include="ManagedUtil.hpp" />
     <ClInclude Include="NeuralNetworkOptions.hpp" />
-    <ClInclude Include="OptimizerDNN.hpp" />
-    <ClInclude Include="OptimizerNN.hpp" />
     <ClInclude Include="Profiler.hpp" />
     <ClInclude Include="Random.hpp" />
   </ItemGroup>
