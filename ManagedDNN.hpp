@@ -19,11 +19,11 @@ public:
 	std::vector<HiddenLayer> Layers;
 	std::vector<ManagedArray> Weights;
 	std::vector<ManagedArray> Deltas;
-	
+
 	// intermediate results
 	std::vector<ManagedArray> X;
 	std::vector<ManagedArray> Z;
-	
+
 	// internal use
 	std::vector<ManagedArray> Activations;
 	std::vector<ManagedArray> D;
@@ -381,22 +381,22 @@ public:
 			else
 			{
 				// Regenerate Layers list
-				
+
 				Weights.resize(opts.HiddenLayers + 1);
 
 				Weights[0] = ManagedArray(opts.Inputs + 1, opts.Nodes);
-				
+
 				Layers.push_back(HiddenLayer(opts.Inputs, opts.Nodes));
 
 				for (int layer = 1; layer < opts.HiddenLayers; layer++)
 				{
 					Weights[layer] = ManagedArray(opts.Nodes + 1, opts.Nodes);
-					
+
 					Layers.push_back(HiddenLayer(opts.Nodes, opts.Nodes));
 				}
 
 				Weights[opts.HiddenLayers] = ManagedArray(opts.Nodes + 1, opts.Categories);
-				
+
 				Layers.push_back(HiddenLayer(opts.Nodes, opts.Categories));
 			}
 		}
@@ -521,7 +521,11 @@ public:
 	{
 		SetupNetwork(output, opts);
 
-		while (!StepNetwork(input, opts)) {}
+		while (!StepNetwork(input, opts)) {
+
+			if (Iterations % 10 == 0)
+				std::cerr << "Iteration: " << Iterations << " Cross Entropy: " << std::scientific << Cost << " L2: " << std::scientific << L2 << std::endl;
+		}
 	}
 
 	// Minimize a continuous differentialble multivariate function. Starting point
@@ -1046,7 +1050,11 @@ public:
 
 		SetupOptimizer(input);
 
-		while (!Optimized(input, opts)) {}
+		while (!Optimized(input, opts)) {
+
+			if (Iterations % 10 == 0)
+				std::cerr << "Iteration: " << Iterations << " Cross Entropy: " << std::scientific << Cost << " L2: " << std::scientific << L2 << std::endl;
+		}
 	}
 
 	void Free()

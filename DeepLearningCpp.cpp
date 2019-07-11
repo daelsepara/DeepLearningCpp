@@ -220,7 +220,7 @@ void Load2D(std::string filename, ManagedArray& input, const char* delimiter, in
 	file.close();
 }
 
-void DNNOptimizer(std::string InputData, int delimiter, double alpha, int epochs, double tolerance, std::vector<int> layers, bool save, std::string SaveDirectory, std::string SaveJSON)
+void DNNOptimizer(std::string InputData, int delimiter, double alpha, int epochs, double tolerance, std::vector<int> layers, bool save, std::string SaveDirectory, std::string SaveJSON, bool Debug = true)
 {
 	std::string BaseDirectory = "./";
 	
@@ -261,19 +261,22 @@ void DNNOptimizer(std::string InputData, int delimiter, double alpha, int epochs
 			std::cerr << "L2 error is " << std::scientific << dnn.L2 << std::endl;
 			std::cerr << "Number of iterations: " << dnn.Iterations << std::endl;
 
-			std::cerr << std::endl << "Network Weights:" << std::endl;
-			for (auto layer = 0; layer < (int)dnn.Weights.size(); layer++)
+			if (Debug)
 			{
-				if (layer < (int)dnn.Weights.size() - 1)
+				std::cerr << std::endl << "Network Weights:" << std::endl;
+				for (auto layer = 0; layer < (int)dnn.Weights.size(); layer++)
 				{
-					std::cerr << "Layer " << layer << std::endl;
+					if (layer < (int)dnn.Weights.size() - 1)
+					{
+						std::cerr << "Layer " << layer << std::endl;
+					}
+					else
+					{
+						std::cerr << "Output layer " << layer << std::endl;
+					}
+
+					ManagedMatrix::Print2D(dnn.Weights[layer]);
 				}
-				else
-				{
-					std::cerr << "Output layer " << layer << std::endl;
-				}
-				
-				ManagedMatrix::Print2D(dnn.Weights[layer]);
 			}
 
 			if (save && SaveJSON.length() > 0)
@@ -293,7 +296,7 @@ void DNNOptimizer(std::string InputData, int delimiter, double alpha, int epochs
 	}
 }
 
-void DNNTrainer(std::string InputData, int delimiter, double alpha, int epochs, double tolerance, std::vector<int> layers, bool useL2, bool save, std::string SaveDirectory, std::string SaveJSON)
+void DNNTrainer(std::string InputData, int delimiter, double alpha, int epochs, double tolerance, std::vector<int> layers, bool useL2, bool save, std::string SaveDirectory, std::string SaveJSON, bool Debug = true)
 {
 	std::string BaseDirectory = "./";
 	
@@ -334,19 +337,22 @@ void DNNTrainer(std::string InputData, int delimiter, double alpha, int epochs, 
 			std::cerr << "L2 error is " << std::scientific << dnn.L2 << std::endl;
 			std::cerr << "Number of iterations: " << dnn.Iterations << std::endl;
 
-			std::cerr << std::endl << "Network Weights:" << std::endl;
-			for (auto layer = 0; layer < (int)dnn.Weights.size(); layer++)
+			if (Debug)
 			{
-				if (layer < (int)dnn.Weights.size() - 1)
+				std::cerr << std::endl << "Network Weights:" << std::endl;
+				for (auto layer = 0; layer < (int)dnn.Weights.size(); layer++)
 				{
-					std::cerr << "Layer " << layer << std::endl;
+					if (layer < (int)dnn.Weights.size() - 1)
+					{
+						std::cerr << "Layer " << layer << std::endl;
+					}
+					else
+					{
+						std::cerr << "Output layer " << layer << std::endl;
+					}
+
+					ManagedMatrix::Print2D(dnn.Weights[layer]);
 				}
-				else
-				{
-					std::cerr << "Output layer " << layer << std::endl;
-				}
-				
-				ManagedMatrix::Print2D(dnn.Weights[layer]);
 			}
 
 			if (save && SaveJSON.length() > 0)
@@ -641,6 +647,8 @@ int main(int argc, char** argv)
 	auto RunDNNTrainer = false;
 	auto RunNNOptimizer = false;
 	auto RunNNTrainer = false;
+
+	auto Debug = true;
 	
 	for (auto i = 0; i < argc; i++)
 	{
@@ -690,6 +698,14 @@ int main(int argc, char** argv)
 		else if (!arg.compare("/PREDICT"))
 		{
 			predict = true;
+		}
+		else if (!arg.compare("/DEBUG"))
+		{
+			Debug = true;
+		}
+		else if (!arg.compare("/NODEBUG"))
+		{
+			Debug = false;
 		}
 
 		if (!arg.compare(0, 9, "/SAVEDIR=") && arg.length() > 9)
@@ -771,7 +787,7 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-			DNNOptimizer(InputData, delimiter, alpha, epochs, tolerance, Layers, save, SaveDir, SaveJSON);
+			DNNOptimizer(InputData, delimiter, alpha, epochs, tolerance, Layers, save, SaveDir, SaveJSON, Debug);
 		}
 	}
 
@@ -783,7 +799,7 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-			DNNTrainer(InputData, delimiter, alpha, epochs, tolerance, Layers, useL2, save, SaveDir, SaveJSON);
+			DNNTrainer(InputData, delimiter, alpha, epochs, tolerance, Layers, useL2, save, SaveDir, SaveJSON, Debug);
 		}
 	}
 	
