@@ -253,7 +253,7 @@ void DNNOptimizer(std::string InputData, int delimiter, double alpha, int epochs
 
 			dnn.Optimize(normalized_input, output, opts);
 
-			std::cerr << "Optimizitation Done" << std::endl;
+			std::cerr << "Optimization Done" << std::endl;
 
 			std::cerr << "elapsed time is " << Profiler::Elapsed(start) << " ms" << std::endl;
 

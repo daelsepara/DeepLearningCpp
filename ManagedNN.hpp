@@ -362,7 +362,11 @@ public:
 	{
 		SetupNetwork(output, opts);
 		
-		while (!StepNetwork(input, opts)) {}
+		while (!StepNetwork(input, opts)) {
+
+			if (Iterations % 1000 == 0)
+				std::cerr << "Iteration: " << Iterations << " Cross Entropy: " << std::scientific << Cost << " L2: " << std::scientific << L2 << std::endl;
+		}
 	}
 
 	// Minimize a continuous differentialble multivariate function. Starting point
@@ -899,7 +903,11 @@ public:
 
 		SetupOptimizer(input);
 
-		while (!Optimized(input, opts)) {}
+		while (!Optimized(input, opts)) {
+			
+			if (Iterations % 1000 == 0)
+				std::cerr << "Iteration: " << Iterations << " Cross Entropy: " << std::scientific << Cost << " L2: " << std::scientific << L2 << std::endl;
+		}
 	}
 
 	void Free()

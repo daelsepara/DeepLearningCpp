@@ -523,7 +523,8 @@ public:
 
 		while (!StepNetwork(input, opts)) {
 
-			std::cerr << "Iteration: " << Iterations << " Cross Entropy: " << std::scientific << Cost << " L2: " << std::scientific << L2 << std::endl;
+			if (Iterations % 1000 == 0)
+				std::cerr << "Iteration: " << Iterations << " Cross Entropy: " << std::scientific << Cost << " L2: " << std::scientific << L2 << std::endl;
 		}
 	}
 
@@ -1051,7 +1052,8 @@ public:
 
 		while (!Optimized(input, opts)) {
 
-			std::cerr << "Iteration: " << Iterations << " Cross Entropy: " << std::scientific << Cost << " L2: " << std::scientific << L2 << std::endl;
+			if (Iterations % 1000 == 0)
+				std::cerr << "Iteration: " << Iterations << " Cross Entropy: " << std::scientific << Cost << " L2: " << std::scientific << L2 << std::endl;
 		}
 	}
 
