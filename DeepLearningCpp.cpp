@@ -649,7 +649,7 @@ int main(int argc, char** argv)
 	auto RunNNTrainer = false;
 
 	auto Debug = true;
-	
+
 	for (auto i = 0; i < argc; i++)
 	{
 		std::string arg = argv[i];
