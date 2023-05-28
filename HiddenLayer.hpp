@@ -3,11 +3,11 @@
 
 class HiddenLayer
 {
-public:	
+public:
 
 	int Inputs;
 	int Outputs;
-	
+
 	HiddenLayer(int inputs, int outputs)
 	{
 		Inputs = inputs;

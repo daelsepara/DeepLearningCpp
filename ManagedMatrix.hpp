@@ -123,7 +123,7 @@ public:
 				{
 					std::cerr << " ";
 				}
-				
+
 				std::cerr << std::setprecision(2) << std::scientific << input(srcoffset + y * input.x + x);
 			}
 
@@ -159,7 +159,7 @@ public:
 	}
 
 	#if !defined (FAST_MATRIX_MULTIPLY)
-	
+
 	// 2D Matrix multiplication - Naive Version
 	static void Multiply(ManagedArray& result, ManagedArray& A, ManagedArray& B)
 	{
@@ -173,7 +173,7 @@ public:
 				for (auto x = 0; x < B.x; x++)
 				{
 					result(x, y) = 0.0;
-					 
+
 					for (auto k = 0; k < A.x; k++)
 					{
 						result(x, y) += A(k, y) * B(x, k);
@@ -182,9 +182,9 @@ public:
 			}
 		}
 	}
-	
+
 	#else
-	
+
 	// 2D Matrix multiplication
 	// slightly faster (due to memory access pattern) but still naive
 	// see: https://tavianator.com/a-quick-trick-for-faster-naive-matrix-multiplication/
@@ -204,7 +204,7 @@ public:
 			for (auto y = 0; y < rows; y++)
 			{
 				rhs = 0;
-				
+
 				for (auto x = 0; x < mid; x++)
 				{
 					auto lhsx = lhs + x;
@@ -233,7 +233,7 @@ public:
 
 		return result;
 	}
-	
+
 	static ManagedArray Pow(ManagedArray& A, double power)
 	{
 		auto result = ManagedArray(A.x, A.y, A.z, A.i, A.j, false);
@@ -257,7 +257,7 @@ public:
 
 		return result;
 	}
-        
+
 	// Matrix * Constant Multiplication
 	static void Multiply(ManagedArray& A, double B)
 	{
@@ -281,7 +281,7 @@ public:
 	{
 		Product(A, A, B);
 	}
-	
+
 	// Element by element multiplication
 	static ManagedArray BSXMUL(ManagedArray& A, ManagedArray& B)
 	{
@@ -532,14 +532,14 @@ public:
 			}
 		}
 	}
-	
+
 	// Expand a matrix A[x][y] by [ex][ey]
 	static ManagedArray Expand(ManagedArray& A, int expandx, int expandy)
 	{
 		ManagedArray output;
-		
+
 		Expand(A, expandx, expandy, output);
-		
+
 		return output;
 	}
 
@@ -591,7 +591,7 @@ public:
 
 		return result;
 	}
-        
+
 	// Create a 2D Diagonal/Identity matrix of size [dim][dim]
 	static ManagedArray Diag(int dim)
 	{
@@ -614,7 +614,7 @@ public:
 			return NULL;
 		}
 	}
-	
+
 	static void Sqrt(ManagedArray& x)
 	{
 		for (auto i = 0; i < x.Length(); i++)

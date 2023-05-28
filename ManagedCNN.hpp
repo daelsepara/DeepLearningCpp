@@ -113,7 +113,7 @@ public:
 
 				Layers[l].Bias.Resize(Layers[l].OutputMaps);
 				ManagedOps::Set(Layers[l].Bias, 0.0);
-				
+
 				InputMaps = Layers[l].OutputMaps;
 			}
 		}
@@ -127,7 +127,7 @@ public:
 
 		Bias.Resize(1, classes);
 		ManagedOps::Set(Bias, 0.0);
-		
+
 		Weights.Resize(features, classes);
 		Rand(Weights, random, features, classes);
 	}

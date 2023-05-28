@@ -15,7 +15,7 @@ private:
 			mem = NULL;
 		}
 	}
-	
+
 	int* _IntList(int size)
 	{
 		auto temp = new int[size];
@@ -26,7 +26,7 @@ private:
 		return temp;
 	}
 
-	
+
 public:
 
 	int x = 0;
@@ -43,12 +43,12 @@ public:
 	{
 		return Data[ix];
 	}
-	
+
 	int Length()
 	{
 		return x;
 	}
-	
+
 	void Free()
 	{
 		_Free(Data);
@@ -77,7 +77,7 @@ private:
 
 		return temp;
 	}
-	
+
 	void _Free(double*& mem)
 	{
 		if (mem != NULL)
@@ -219,7 +219,7 @@ public:
 
 		Data = _New(x * y * z * i * j, initialize);
 	}
-	
+
 	void Free()
 	{
 		_Free(Data);

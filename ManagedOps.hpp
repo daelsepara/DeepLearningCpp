@@ -229,7 +229,7 @@ public:
 		}
 	}
 
-	// Copies a 4D [index][x][y][z] to 2D [x][y] 
+	// Copies a 4D [index][x][y][z] to 2D [x][y]
 	static void Copy4D2D(ManagedArray& dst, ManagedArray& src, int z, int index)
 	{
 		auto size2D = dst.x * dst.y;
@@ -260,7 +260,7 @@ public:
 		}
 	}
 
-	// Copies a 2D [x][y] array to a 4D [i][j][x][y] 
+	// Copies a 2D [x][y] array to a 4D [i][j][x][y]
 	static void Copy2D4DIJ(ManagedArray& dst, ManagedArray& src, int i, int j)
 	{
 		auto size2D = src.x * src.y;

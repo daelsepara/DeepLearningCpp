@@ -562,18 +562,18 @@ public:
 //
 // Usage: [X, fX, i] = fmincg(f, X, options)
 //
-// See also: checkgrad 
+// See also: checkgrad
 //
 // Copyright (C) 2001 and 2002 by Carl Edward Rasmussen. Date 2002-02-13
 //
 //
 // (C) Copyright 1999, 2000 & 2001, Carl Edward Rasmussen
-// 
+//
 // Permission is granted for anyone to copy, use, or modify these
 // programs and accompanying documents for purposes of research or
 // education, provided this copyright notice is retained, and note is
 // made of any changes that have been made.
-// 
+//
 // These programs and documents are distributed without any warranty,
 // express or implied.  As the programs were written for research
 // purposes only, they have not been tested to the degree that would be
@@ -583,10 +583,10 @@ public:
 // Original C# implementation by Peter Sergio Larsen to work with Accord.NET framework
 // see: https://github.com/accord-net/framework/blob/master/Sources/Extras/Accord.Math.Noncommercial/NonlinearConjugateGradient.cs
 //
-// Changes by [sdsepara, 2018]: 
+// Changes by [sdsepara, 2018]:
 //
 // 1) Function to minimize must return a result of type FuncOutput (see above)
-// 2) success and ls_failed changed to type bool, and M to type int. 
+// 2) success and ls_failed changed to type bool, and M to type int.
 // 3) modified to work with NeuralNetworkClassifier
 // 4) each call to StepOptimizer executes just one cycle of optimization
 // 5) implemented Multiply, Add, Copy helper functions
@@ -834,7 +834,7 @@ private:
 
 				if (f2 > f1)
 				{
-					// quadratic fit 
+					// quadratic fit
 					z2 = z3 - ((0.5 * d3 * z3 * z3) / (d3 * z3 + f2 - f3));
 				}
 				else
@@ -970,7 +970,7 @@ private:
 			// end of line search
 		}
 
-		// if line searched succeeded 
+		// if line searched succeeded
 		if (success)
 		{
 			f1 = f2;
@@ -991,7 +991,7 @@ private:
 			// get slope
 			d2 = Multiply(df1, s);
 
-			// new slope must be negative 
+			// new slope must be negative
 			if (d2 > 0.0)
 			{
 				// use steepest direction

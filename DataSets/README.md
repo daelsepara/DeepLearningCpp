@@ -2,7 +2,7 @@
 
 Data sets for testing Neural Network Classifier software are available on this page. Each line in the text file is a single data point. The values in each line are separated by a delimiter character that is either a tab (\t) character or a comma (,). The last value in each line is the classification category of that data point.
 
-Citations for these data sets (except iris, xor and primes) were adopted from: 
+Citations for these data sets (except iris, xor and primes) were adopted from:
 
 http://cs.joensuu.fi/sipu/datasets/
 
@@ -36,7 +36,7 @@ C.T. Zahn, "Graph-theoretical methods for detecting and describing gestalt clust
 
 ![D31](/DataSets/Visualizations/D31.png)
 
-C.J. Veenman, M.J.T. Reinders, and E. Backer, "A maximum variance cluster algorithm". IEEE Trans. Pattern Analysis and Machine Intelligence 2002. 24(9): p. 1273-1280. 
+C.J. Veenman, M.J.T. Reinders, and E. Backer, "A maximum variance cluster algorithm". IEEE Trans. Pattern Analysis and Machine Intelligence 2002. 24(9): p. 1273-1280.
 
 * Dimensions = 2
 * Categories = 31
@@ -64,7 +64,7 @@ R.A. Fisher, "The use of multiple measurements in taxonomic problems" Annual Eug
 
 ## Jain
 
-A. Jain and M. Law, "Data clustering: A user's dilemma". Lecture Notes in Computer Science, 2005. 3776: p. 1-10. 
+A. Jain and M. Law, "Data clustering: A user's dilemma". Lecture Notes in Computer Science, 2005. 3776: p. 1-10.
 
 ![Jain](/DataSets/Visualizations/jain.png)
 
@@ -76,7 +76,7 @@ A. Jain and M. Law, "Data clustering: A user's dilemma". Lecture Notes in Comput
 
 ![Path-based](/DataSets/Visualizations/pathbased.png)
 
-H. Chang and D.Y. Yeung, "Robust path-based spectral clustering". Pattern Recognition, 2008. 41(1): p. 191-203. 
+H. Chang and D.Y. Yeung, "Robust path-based spectral clustering". Pattern Recognition, 2008. 41(1): p. 191-203.
 
 * Dimensions = 2
 * Categories = 3
@@ -96,7 +96,7 @@ Prime numbers in the range 0-255. Numbers are represented in 8-bit binary form c
 
 ![R15](/DataSets/Visualizations/R15.png)
 
-C.J. Veenman, M.J.T. Reinders, and E. Backer, "A maximum variance cluster algorithm". IEEE Trans. Pattern Analysis and Machine Intelligence, 2002. 24(9): p. 1273-1280. 
+C.J. Veenman, M.J.T. Reinders, and E. Backer, "A maximum variance cluster algorithm". IEEE Trans. Pattern Analysis and Machine Intelligence, 2002. 24(9): p. 1273-1280.
 
 * Dimensions = 2
 * Categories = 15
@@ -106,7 +106,7 @@ C.J. Veenman, M.J.T. Reinders, and E. Backer, "A maximum variance cluster algori
 
 ![R15](/DataSets/Visualizations/spiral.png)
 
-H. Chang and D.Y. Yeung, "Robust path-based spectral clustering". Pattern Recognition, 2008. 41(1): p. 191-203. 
+H. Chang and D.Y. Yeung, "Robust path-based spectral clustering". Pattern Recognition, 2008. 41(1): p. 191-203.
 
 * Dimensions = 2
 * Categories = 3

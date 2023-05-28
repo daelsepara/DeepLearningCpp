@@ -25,7 +25,7 @@ public:
 
 		std::istringstream is(line);
 		std::string token;
-			
+
 		for (auto x = 0; x < A.Length(); x++)
 		{
 			std::getline(is, token, ',');
@@ -95,7 +95,7 @@ public:
 
 			std::istringstream is(line);
 			std::string token;
-			
+
 			for (auto x = 0; x < A.x; x++)
 			{
 				std::getline(is, token, ',');
@@ -288,14 +288,14 @@ public:
 		buffer << BaseDirectory << "/" << BaseFileName << ".json";
 
 		std::string filename = buffer.str();
-		
+
 		std::ofstream file(filename);
 
 		file << json_string;
 
 		file.close();
 	}
-	
+
 	static ManagedArray LoadData(std::string BaseDirectory, std::string BaseFileName, int sizex, int sizey, int sizez)
 	{
 		auto data = ManagedArray(sizex, sizey, sizez);
